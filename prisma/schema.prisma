@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+datasource db {
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+enum FRIEND_INVITATION_STATUS {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum EVENT_INVITATION_STATUS {
+  PENDING
+  ACCEPTED
+  DECLINED
+  CANCELED
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  first_name      String @db.VarChar(50)
+  last_name       String @db.VarChar(50)
+  email           String @unique @db.VarChar(255)
+  password        String @db.VarChar(255)
+  profile_pic_url String @default("") @db.VarChar(150)
+
+  friend_sent      Friend[] @relation("SenderFriend")
+  friends_received Friend[] @relation("ReceiverFriend")
+  events           Event[]
+}
+
+model Friend {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  receiver_id       Int
+  receiver          User                     @relation(name: "ReceiverFriend", fields: [receiver_id], references: [id], onDelete: Cascade)
+  sender_id         Int
+  sender            User                     @relation(name: "SenderFriend", fields: [sender_id], references: [id], onDelete: Cascade)
+  invitation_status FRIEND_INVITATION_STATUS
+
+  event_attendance Event_Attendance[]
+
+  @@index([receiver_id])
+  @@index([sender_id])
+}
+
+model Event {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  start_date_time DateTime
+  end_date_time   DateTime
+
+  color   String
+  deleted DateTime
+
+  event_owner_id Int
+  event_owner    User @relation(fields: [event_owner_id], references: [id], onDelete: Cascade)
+
+  Event_Attendance Event_Attendance[]
+}
+
+model Event_Attendance {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  friend_id Int
+  friend    Friend @relation(fields: [friend_id], references: [id], onDelete: Cascade)
+
+  event_id Int
+  event    Event @relation(fields: [event_id], references: [id], onDelete: Cascade)
+
+  response_type EVENT_INVITATION_STATUS
+}
