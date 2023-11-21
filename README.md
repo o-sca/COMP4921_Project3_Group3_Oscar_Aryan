@@ -1,1 +1,1 @@
-## Project 3 Calendar App
+## COMP4921_Project3_Group3_Oscar_Aryan
