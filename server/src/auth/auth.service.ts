@@ -10,7 +10,10 @@ import { SignInDto, SignUpDto } from './dto';
 export class AuthService {
   private readonly saltRounds: number;
 
-  constructor(private prisma: PrismaService, private config: ConfigService) {
+  constructor(
+    private prisma: PrismaService,
+    private config: ConfigService,
+  ) {
     this.saltRounds = this.config.get('SALT_ROUNDS', 12);
   }
 

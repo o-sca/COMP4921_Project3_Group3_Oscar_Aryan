@@ -6,15 +6,15 @@ export class SignInDto {
   @IsNotEmpty()
   @ApiProperty({
     example: 'dummyuser',
-    required: true
- })
+    required: true,
+  })
   email: string;
 
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
     example: 'Password123!',
-    required: true
- })
+    required: true,
+  })
   password: string;
 }

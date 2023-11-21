@@ -28,7 +28,10 @@ export class AuthController {
 
   @Get('signin')
   @Render('signin')
-  @ApiOperation({ summary: 'Render Sign-In Page', description: 'Renders the sign-in page with an errors array.' })
+  @ApiOperation({
+    summary: 'Render Sign-In Page',
+    description: 'Renders the sign-in page with an errors array.',
+  })
   signin() {
     return { errors: [] };
   }
@@ -36,7 +39,10 @@ export class AuthController {
   @UseFilters(ErrorsExceptionFilter)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Validates an existing user.' })
-  @ApiResponse({ status: HttpStatus.CREATED, description: 'User has been successfully Validated.' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'User has been successfully Validated.',
+  })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
   @ApiBody({
     type: SignInDto,
@@ -54,7 +60,10 @@ export class AuthController {
 
   @Get('signup')
   @Render('signup')
-  @ApiOperation({ summary: 'Render Signup Page', description: 'Renders the signup page with an errors array.' })
+  @ApiOperation({
+    summary: 'Render Signup Page',
+    description: 'Renders the signup page with an errors array.',
+  })
   signup() {
     return { errors: [] };
   }
@@ -62,7 +71,10 @@ export class AuthController {
   @UseFilters(ErrorsExceptionFilter)
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Creates new user' })
-  @ApiResponse({ status: HttpStatus.CREATED, description: 'User has been successfully created.' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'User has been successfully created.',
+  })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
   @ApiBody({
     type: SignUpDto,
@@ -80,7 +92,11 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Get('signout')
-  @ApiOperation({ summary: 'Sign Out', description: 'Signs out the user. By destroying Session. and redirect user to root.' })
+  @ApiOperation({
+    summary: 'Sign Out',
+    description:
+      'Signs out the user. By destroying Session. and redirect user to root.',
+  })
   signOut(@Session() session: UserSession, @Res() res: Response) {
     return this.authService.signOut(session, res);
   }
@@ -89,7 +105,10 @@ export class AuthController {
   @UseFilters(SessionExceptionFilter)
   @HttpCode(HttpStatus.OK)
   @Render('profile')
-  @ApiOperation({ summary: 'User Profile', description: 'Renders the user profile page.' })
+  @ApiOperation({
+    summary: 'User Profile',
+    description: 'Renders the user profile page.',
+  })
   @Get('profile')
   profile(@Session() session: UserSession) {
     return { user: session.user, errors: [] };

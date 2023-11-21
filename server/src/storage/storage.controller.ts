@@ -25,7 +25,10 @@ export class StorageController {
 
   @HttpCode(HttpStatus.OK)
   @UseFilters(ProfilePicExceptionFilter)
-  @ApiOperation({ summary: 'Uploading Profile Picture', description: 'Uploading user profile picture to cloudinary' })
+  @ApiOperation({
+    summary: 'Uploading Profile Picture',
+    description: 'Uploading user profile picture to cloudinary',
+  })
   @UseInterceptors(FileInterceptor('file'))
   @Redirect('/profile')
   @Post('avatars/upload')
