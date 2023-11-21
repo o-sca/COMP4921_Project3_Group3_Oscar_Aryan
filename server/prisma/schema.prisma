@@ -88,3 +88,8 @@ model Event_Attendance {
 
   response_type EVENT_INVITATION_STATUS
 }
+
+model ExpiredJwt {
+  id         Int      @id @default(autoincrement())
+  token      String   @db.VarChar(400) @unique
+}

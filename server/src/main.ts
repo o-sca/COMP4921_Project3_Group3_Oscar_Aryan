@@ -1,9 +1,8 @@
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import MongoStore from 'connect-mongo';
+import cookieParser from 'cookie-parser';
 import 'dotenv/config';
-import session from 'express-session';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 
@@ -17,26 +16,10 @@ async function bootstrap() {
     type: VersioningType.URI,
   });
 
+  app.use(cookieParser());
   app.use(helmet());
 
-  app.enableCors({ origin: true });
-
-  app.use(
-    session({
-      secret: process.env.SESSION_SECRET,
-      saveUninitialized: false,
-      resave: false,
-      cookie: {
-        secure: process.env.NODE_ENV === 'production' ? true : false,
-        maxAge: 1000 * 60 * 60 * 24,
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-      },
-      store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URL,
-        crypto: { secret: process.env.MONGO_SECRET },
-      }),
-    }),
-  );
+  app.enableCors({ origin: true, credentials: true });
 
   const options = new DocumentBuilder()
     .setTitle('Calender App')

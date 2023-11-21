@@ -5,38 +5,20 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Render,
   Response as Res,
-  Session,
-  UseFilters,
   UseGuards,
 } from '@nestjs/common';
-import { Response } from 'express';
-import {
-  AuthGuard,
-  ErrorsExceptionFilter,
-  SessionExceptionFilter,
-  UserSession,
-} from '../common';
+import { AuthGuard, ReqUser } from '../common';
 import { AuthService } from './auth.service';
 import { SignInDto, SignUpDto } from './dto';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Response } from 'express';
+import { TokenCookie } from 'src/common/decorators/token-cookie.decorator';
 
-@Controller()
+@Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Get('signin')
-  @Render('signin')
-  @ApiOperation({
-    summary: 'Render Sign-In Page',
-    description: 'Renders the sign-in page with an errors array.',
-  })
-  signin() {
-    return { errors: [] };
-  }
-
-  @UseFilters(ErrorsExceptionFilter)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Validates an existing user.' })
   @ApiResponse({
@@ -50,25 +32,12 @@ export class AuthController {
   })
   @Post('signin')
   async signIn(
-    @Session() session: UserSession,
-    @Res() res: Response,
     @Body() dto: SignInDto,
+    @Res({ passthrough: true }) res: Response,
   ) {
-    await this.authService.signIn(session, dto);
-    return res.redirect('/');
+    return this.authService.signIn(dto, res);
   }
 
-  @Get('signup')
-  @Render('signup')
-  @ApiOperation({
-    summary: 'Render Signup Page',
-    description: 'Renders the signup page with an errors array.',
-  })
-  signup() {
-    return { errors: [] };
-  }
-
-  @UseFilters(ErrorsExceptionFilter)
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Creates new user' })
   @ApiResponse({
@@ -81,13 +50,8 @@ export class AuthController {
     description: 'User is loaded in Session',
   })
   @Post('signup')
-  async signUp(
-    @Session() session: UserSession,
-    @Res() res: Response,
-    @Body() dto: SignUpDto,
-  ) {
-    await this.authService.signUp(session, dto);
-    return res.redirect('/');
+  async signUp(@Body() dto: SignUpDto) {
+    return this.authService.signUp(dto);
   }
 
   @HttpCode(HttpStatus.OK)
@@ -97,20 +61,21 @@ export class AuthController {
     description:
       'Signs out the user. By destroying Session. and redirect user to root.',
   })
-  signOut(@Session() session: UserSession, @Res() res: Response) {
-    return this.authService.signOut(session, res);
+  signOut(
+    @TokenCookie() token: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.authService.signOut(token, res);
   }
 
   @UseGuards(AuthGuard)
-  @UseFilters(SessionExceptionFilter)
   @HttpCode(HttpStatus.OK)
-  @Render('profile')
   @ApiOperation({
     summary: 'User Profile',
     description: 'Renders the user profile page.',
   })
   @Get('profile')
-  profile(@Session() session: UserSession) {
-    return { user: session.user, errors: [] };
+  profile(@ReqUser() user: unknown) {
+    return user;
   }
 }

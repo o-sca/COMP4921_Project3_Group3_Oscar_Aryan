@@ -1,8 +1,13 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Response } from 'express';
-import { UserSession, ValidationException } from '../common';
+import { ValidationException } from '../common';
 import { PrismaService } from '../prisma/prisma.service';
 import { SignInDto, SignUpDto } from './dto';
 
@@ -12,15 +17,17 @@ export class AuthService {
 
   constructor(
     private prisma: PrismaService,
+    private jwt: JwtService,
     private config: ConfigService,
   ) {
     this.saltRounds = this.config.get('SALT_ROUNDS', 12);
   }
 
-  async signIn(session: UserSession, dto: SignInDto) {
+  async signIn(dto: SignInDto, res: Response) {
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
     });
+
     if (!user) {
       throw new ValidationException(
         'Invalid credentials',
@@ -38,13 +45,19 @@ export class AuthService {
 
     delete user.password;
 
-    session.authenticated = true;
-    session.user = user;
+    const token = await this.jwt.signAsync({ user });
+
+    res.cookie(this.config.get<string>('TOKEN_NAME', 'aryan.sid'), token, {
+      httpOnly: false,
+      secure: false,
+      sameSite: 'none',
+      maxAge: 1000 * 60 * 60, // 1 hour
+    });
 
     return;
   }
 
-  async signUp(session: UserSession, dto: SignUpDto) {
+  async signUp(dto: SignUpDto) {
     if (dto.password !== dto.confirmPassword) {
       throw new ValidationException('Passwords do not match');
     }
@@ -61,10 +74,6 @@ export class AuthService {
       });
 
       delete user.password;
-
-      session.authenticated = true;
-      session.user = user;
-
       return;
     } catch (err) {
       if (err.code === 'P2002') {
@@ -74,13 +83,26 @@ export class AuthService {
     }
   }
 
-  async signOut(session: UserSession, res: Response) {
-    res.clearCookie('connect.sid');
-    session.destroy((err) => {
-      if (err) {
-        throw new HttpException(err.message, HttpStatus.SERVICE_UNAVAILABLE);
+  async signOut(token: string, res: Response) {
+    if (!token) return;
+    try {
+      await this.prisma.expiredJwt.create({
+        data: {
+          token,
+        },
+      });
+
+      res.clearCookie(this.config.get('TOKEN_NAME', 'aryan.sid'), {
+        path: '/',
+      });
+
+      return;
+    } catch (err) {
+      if (err.code === 'P2002') {
+        // token already exists
+        return;
       }
-    });
-    return res.redirect('/');
+      throw new InternalServerErrorException(err.message);
+    }
   }
 }
