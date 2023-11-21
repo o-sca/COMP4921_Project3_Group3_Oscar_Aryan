@@ -1,0 +1,21 @@
+.signup-container {
+  margin-bottom: 30px;
+}
+
+.signup-container mat-form-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 50%;
+}
+
+.error-message-container {
+  margin-top: 10px;
+  color: red;
+}
+
+.router-link {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}

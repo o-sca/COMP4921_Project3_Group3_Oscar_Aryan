@@ -1,0 +1,26 @@
+.landing-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.paragraph-container mat-form-field,
+.generate-container mat-form-field {
+  width: 70vw;
+  height: 50vh;
+}
+
+.paragraph-container mat-form-field textarea,
+.generate-container mat-form-field textarea {
+  width: 100%;
+  height: 45vh;
+}
+
+.summary-card {
+  width: 70vw;
+}
+
+.summary-card mat-card-title {
+  text-align: center;
+}

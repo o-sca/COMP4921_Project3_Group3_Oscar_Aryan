@@ -1,0 +1,34 @@
+<div class="signin-container">
+  <h1>Sign In</h1>
+  <mat-form-field appearance="fill">
+    <mat-label>Username</mat-label>
+    <input matInput placeholder="felix" [formControl]="username" required />
+    @if (username.invalid) {
+    <mat-error>{{ getErrorMessage() }}</mat-error>
+    }
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Password</mat-label>
+    <input matInput type="password" [formControl]="password" required />
+    @if (password.invalid) {
+    <mat-error>{{ getErrorMessage() }}</mat-error>
+    }
+  </mat-form-field>
+  <div>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="!password.valid || !username.valid"
+      (click)="signIn()"
+    >
+      Sign In
+    </button>
+  </div>
+  <div class="error-message-container" *ngIf="authError">
+    {{ errorMessage }}
+  </div>
+</div>
+<a class="router-link" routerLink="/signup">Create an account</a>
+<a class="router-link" routerLink="/forgot">Forgot password?</a>
+<mat-spinner [diameter]="50" *ngIf="spinner.visibility"></mat-spinner>
+<router-outlet></router-outlet>
