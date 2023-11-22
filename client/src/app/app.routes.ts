@@ -6,19 +6,10 @@ import { ProfileComponent } from './profile/profile.component';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { AuthedGuard } from './core/guards/authed.guard';
-import { AdminComponent } from './admin/admin.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent, pathMatch: 'full' },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
-  {
-    path: 'admin',
-    component: AdminComponent,
-    canActivate: [AuthGuard],
-    data: {
-      role: 'ADMIN',
-    },
-  },
   {
     path: 'signin',
     component: SignInComponent,
