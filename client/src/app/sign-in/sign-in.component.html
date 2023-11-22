@@ -1,9 +1,14 @@
 <div class="signin-container">
   <h1>Sign In</h1>
   <mat-form-field appearance="fill">
-    <mat-label>Username</mat-label>
-    <input matInput placeholder="felix" [formControl]="username" required />
-    @if (username.invalid) {
+    <mat-label>Email</mat-label>
+    <input
+      matInput
+      placeholder="aryan@scheduler.sh"
+      [formControl]="email"
+      required
+    />
+    @if (email.invalid) {
     <mat-error>{{ getErrorMessage() }}</mat-error>
     }
   </mat-form-field>
@@ -18,7 +23,7 @@
     <button
       mat-raised-button
       color="primary"
-      [disabled]="!password.valid || !username.valid"
+      [disabled]="!password.valid || !email.valid"
       (click)="signIn()"
     >
       Sign In

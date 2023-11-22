@@ -41,7 +41,7 @@ import { SpinnerService } from '../core/services/spinner.service';
 export class SignInComponent {
   authError: boolean;
   errorMessage: string;
-  username: FormControl;
+  email: FormControl;
   password: FormControl;
 
   constructor(
@@ -51,12 +51,12 @@ export class SignInComponent {
   ) {
     this.authError = false;
     this.errorMessage = '';
-    this.username = new FormControl(null, [Validators.required]);
+    this.email = new FormControl(null, [Validators.required, Validators.email]);
     this.password = new FormControl(null, [Validators.required]);
   }
 
   getErrorMessage(): string {
-    if (this.username.hasError('required')) {
+    if (this.email.hasError('required')) {
       return 'You must enter a username';
     }
 
@@ -68,7 +68,7 @@ export class SignInComponent {
   }
 
   signIn() {
-    this.auth.signIn(this.username.value!, this.password.value!).subscribe({
+    this.auth.signIn(this.email.value!, this.password.value!).subscribe({
       next: () => {
         this.router.navigate(['/']);
       },

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import {
   FormControl,
+  FormGroup,
   FormsModule,
   ReactiveFormsModule,
   Validators,
@@ -18,6 +19,14 @@ import {
 } from '@angular/router';
 import { AuthService } from '../core/services/auth.service';
 import { SpinnerService } from '../core/services/spinner.service';
+
+interface SignUpForm {
+  firstName: FormControl<string>;
+  lastName: FormControl<string>;
+  email: FormControl<string>;
+  password: FormControl<string>;
+  confirmPassword: FormControl<string>;
+}
 
 @Component({
   selector: 'app-sign-up',
@@ -40,10 +49,7 @@ import { SpinnerService } from '../core/services/spinner.service';
 export class SignUpComponent {
   registrationError: boolean;
   errorMessage: string;
-
-  username: FormControl;
-  email: FormControl;
-  password: FormControl;
+  signUpForm: FormGroup<SignUpForm>;
 
   constructor(
     private auth: AuthService,
@@ -53,14 +59,39 @@ export class SignUpComponent {
     this.registrationError = false;
     this.errorMessage = '';
 
-    this.username = new FormControl(null, [Validators.required]);
-    this.email = new FormControl(null, [Validators.required, Validators.email]);
-    this.password = new FormControl(null, [Validators.required]);
+    this.signUpForm = new FormGroup<SignUpForm>({
+      firstName: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      lastName: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      email: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.email],
+      }),
+      password: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      confirmPassword: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+    });
   }
 
   signUp() {
     this.auth
-      .signUp(this.email.value!, this.password.value!, this.username.value!)
+      .signUp({
+        email: this.signUpForm.value.email!,
+        firstName: this.signUpForm.value.firstName!,
+        lastName: this.signUpForm.value.lastName!,
+        password: this.signUpForm.value.password!,
+        confirmPassword: this.signUpForm.value.confirmPassword!,
+      })
       .subscribe({
         next: () => {
           this.router.navigate([this.auth.redirectUrl]);

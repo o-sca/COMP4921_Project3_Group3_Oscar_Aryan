@@ -11,22 +11,19 @@ import { AuthService } from '../core/services/auth.service';
   styleUrl: './profile.component.css',
 })
 export class ProfileComponent implements OnInit, OnDestroy {
-  username: string;
+  firstName: string;
   email: string;
-  userType: string;
 
   constructor(private auth: AuthService) {
-    this.username = '';
+    this.firstName = '';
     this.email = '';
-    this.userType = '';
   }
 
   ngOnInit(): void {
     this.auth.checkMe().subscribe({
       next: (response) => {
-        this.username = response['username'];
-        this.email = response['email'];
-        this.userType = response['user_type'];
+        this.firstName = response.user.first_name;
+        this.email = response.user.email;
       },
       error(err) {
         console.error(err);

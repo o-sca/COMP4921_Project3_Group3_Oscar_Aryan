@@ -1,15 +1,10 @@
 <nav>
   <mat-toolbar color="primary">
     <mat-toolbar-row>
-      <span>Lieu</span>
+      <span>Scheduler</span>
     </mat-toolbar-row>
     <mat-toolbar-row>
       <button mat-raised-button color="accent" routerLink="/">Home</button>
-      <span *ngIf="authenticated && role === 'ADMIN'">
-        <button mat-raised-button color="accent" routerLink="/admin">
-          Admin
-        </button>
-      </span>
       <span *ngIf="authenticated">
         <button mat-raised-button color="accent" routerLink="/profile">
           Profile
