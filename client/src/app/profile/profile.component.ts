@@ -13,10 +13,12 @@ import { AuthService } from '../core/services/auth.service';
 export class ProfileComponent implements OnInit, OnDestroy {
   firstName: string;
   email: string;
+  profilePicUrl: string;
 
   constructor(private auth: AuthService) {
     this.firstName = '';
     this.email = '';
+    this.profilePicUrl = '';
   }
 
   ngOnInit(): void {
@@ -24,6 +26,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       next: (response) => {
         this.firstName = response.user.first_name;
         this.email = response.user.email;
+        this.profilePicUrl = response.user.profile_pic_url;
       },
       error(err) {
         console.error(err);
