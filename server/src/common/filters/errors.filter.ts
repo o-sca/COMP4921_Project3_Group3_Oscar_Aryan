@@ -14,6 +14,8 @@ export class ErrorsExceptionFilter implements ExceptionFilter {
 
     response.status(exception.getStatus());
 
-    return response.status(400);
+    return response.status(400).json({
+      error: exception.getResponse(),
+    });
   }
 }
