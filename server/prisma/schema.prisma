@@ -3,7 +3,6 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -39,6 +38,7 @@ model User {
   friend_sent      Friend[] @relation("SenderFriend")
   friends_received Friend[] @relation("ReceiverFriend")
   events           Event[]
+  event_attendance Event_Attendance[]
 }
 
 model Friend {
@@ -51,8 +51,6 @@ model Friend {
   sender_id         Int
   sender            User                     @relation(name: "SenderFriend", fields: [sender_id], references: [id], onDelete: Cascade)
   invitation_status FRIEND_INVITATION_STATUS
-
-  event_attendance Event_Attendance[]
 
   @@index([receiver_id])
   @@index([sender_id])
@@ -80,8 +78,8 @@ model Event_Attendance {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  friend_id Int
-  friend    Friend @relation(fields: [friend_id], references: [id], onDelete: Cascade)
+  user_attende_id Int
+  user_attende    User @relation(fields: [user_attende_id], references: [id], onDelete: Cascade)
 
   event_id Int
   event    Event @relation(fields: [event_id], references: [id], onDelete: Cascade)
@@ -91,5 +89,8 @@ model Event_Attendance {
 
 model ExpiredJwt {
   id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  
   token      String   @db.VarChar(400) @unique
 }
