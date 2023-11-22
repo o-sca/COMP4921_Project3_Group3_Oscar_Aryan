@@ -78,4 +78,14 @@ export class AuthController {
   profile(@ReqUser() user: unknown) {
     return user;
   }
+
+  @ApiOperation({
+    summary: 'Check Authentication',
+    description: 'Check if user is authenticated',
+  })
+  @HttpCode(HttpStatus.OK)
+  @Get('session')
+  session(@TokenCookie() token: string) {
+    return this.authService.session(token);
+  }
 }

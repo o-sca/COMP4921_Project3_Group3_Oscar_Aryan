@@ -14,6 +14,7 @@ import { SignInDto, SignUpDto } from './dto';
 @Injectable()
 export class AuthService {
   private readonly saltRounds: number;
+  private readonly isProduction: boolean;
 
   constructor(
     private prisma: PrismaService,
@@ -21,6 +22,8 @@ export class AuthService {
     private config: ConfigService,
   ) {
     this.saltRounds = this.config.get('SALT_ROUNDS', 12);
+    this.isProduction =
+      this.config.get<string>('NODE_ENV', 'development') === 'production';
   }
 
   async signIn(dto: SignInDto, res: Response) {
@@ -48,9 +51,9 @@ export class AuthService {
     const token = await this.jwt.signAsync({ user });
 
     res.cookie(this.config.get<string>('TOKEN_NAME', 'aryan.sid'), token, {
-      httpOnly: false,
-      secure: false,
-      sameSite: 'none',
+      httpOnly: this.isProduction ?? false,
+      secure: this.isProduction ?? false,
+      sameSite: this.isProduction ? 'none' : 'strict',
       maxAge: 1000 * 60 * 60, // 1 hour
     });
 
@@ -103,6 +106,18 @@ export class AuthService {
         return;
       }
       throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async session(token: string) {
+    if (!token) {
+      return { authenticated: false };
+    }
+    try {
+      await this.jwt.verifyAsync(token);
+      return { authenticated: true };
+    } catch (err) {
+      return { authenticated: false };
     }
   }
 }
