@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 export class ParseTokenPipe implements PipeTransform {
   constructor(private config: ConfigService) {}
 
-  transform(value: unknown) {
+  transform(value: Record<string, string | number>) {
     const tokenName = this.config.get<string>('TOKEN_NAME', 'aryan.sid');
     return value[tokenName] ?? value;
   }
