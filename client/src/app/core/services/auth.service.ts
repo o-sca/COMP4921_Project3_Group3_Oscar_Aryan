@@ -7,11 +7,9 @@ import { CookieService } from 'ngx-cookie-service';
 interface ProfileResponse {
   exp: number;
   iat: number;
-  user: {
-    email: string;
-    first_name: string;
-    profile_pic_url: string;
-  };
+  email: string;
+  first_name: string;
+  profile_pic_url: string;
 }
 
 @Injectable({ providedIn: 'root' })

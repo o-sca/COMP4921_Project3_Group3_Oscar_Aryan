@@ -15,7 +15,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
   email: string;
   profilePicUrl: string;
 
-  constructor(private auth: AuthService) {
+  constructor(
+    private auth: AuthService,
+  ) {
     this.firstName = '';
     this.email = '';
     this.profilePicUrl = '';
@@ -24,9 +26,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.auth.checkMe().subscribe({
       next: (response) => {
-        this.firstName = response.user.first_name;
-        this.email = response.user.email;
-        this.profilePicUrl = response.user.profile_pic_url;
+        this.firstName = response.first_name;
+        this.email = response.email;
+        this.profilePicUrl = response.profile_pic_url;
       },
       error(err) {
         console.error(err);
