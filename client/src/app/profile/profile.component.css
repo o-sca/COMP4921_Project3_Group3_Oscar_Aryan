@@ -1,0 +1,27 @@
+.mat-elevation-z8 h4 {
+  text-align: center;
+}
+
+.action-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.action-row button {
+  width: 1em;
+  margin: 0 5px;
+}
+
+.profile-card button {
+  text-align: center;
+  height: auto;
+  width: auto;
+  position: absolute;
+  right: 0;
+  margin-right: 30px;
+}
+
+.profile-card .mat-icon {
+  align-items: center;
+  padding: 5px;
+}

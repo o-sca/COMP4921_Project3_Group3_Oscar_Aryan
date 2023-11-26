@@ -1,0 +1,30 @@
+<h4 mat-dialog-title>Edit Profile</h4>
+<div mat-dialog-content>
+  <p>Current Profile Picture</p>
+  <img src="{{ data.profilePicUrl }}" style="width: 100%" />
+  <div>
+    <input
+      matInput
+      type="file"
+      name="file"
+      (change)="selectFile($event)"
+      accept="image/*"
+    />
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="updateProfilePic(file)"
+      [mat-dialog-close]="true"
+    >
+      Update Profile
+    </button>
+    <button
+      mat-raised-button
+      mat-dialog-close
+      color="warn"
+      style="position: absolute; right: 0; margin-right: 20px"
+    >
+      Cancel
+    </button>
+  </div>
+</div>

@@ -1,16 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable, Output, inject } from '@angular/core';
-import { UtilityService } from './utility.service';
-import { catchError, map, throwError } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
-
-interface ProfileResponse {
-  exp: number;
-  iat: number;
-  email: string;
-  first_name: string;
-  profile_pic_url: string;
-}
+import { catchError, map, throwError } from 'rxjs';
+import { ProfileResponse } from '../schemas/profile.schema';
+import { JSON_HEADERS } from './http-header';
+import { UtilityService } from './utility.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -46,7 +40,10 @@ export class AuthService {
           email,
           password,
         },
-        { observe: 'response' },
+        {
+          headers: JSON_HEADERS,
+          observe: 'response',
+        },
       )
       .pipe(
         map((response) => {
@@ -85,7 +82,10 @@ export class AuthService {
           password,
           confirmPassword,
         },
-        { observe: 'response' },
+        {
+          headers: JSON_HEADERS,
+          observe: 'response',
+        },
       )
       .pipe(
         map((response) => {
@@ -103,7 +103,10 @@ export class AuthService {
 
   signOut() {
     return this.http
-      .get(this._baseUrl + '/auth/signout', { observe: 'response' })
+      .get(this._baseUrl + '/auth/signout', {
+        headers: JSON_HEADERS,
+        observe: 'response',
+      })
       .pipe(
         map((response) => {
           this._cookie.deleteAll('/');
@@ -121,6 +124,7 @@ export class AuthService {
   checkMe() {
     return this.http
       .get(this._baseUrl + '/auth/profile', {
+        headers: JSON_HEADERS,
         observe: 'response',
       })
       .pipe(
@@ -142,12 +146,14 @@ export class AuthService {
   checkAuthenticated() {
     return this.http
       .get(this._baseUrl + '/auth/session', {
+        headers: JSON_HEADERS,
         observe: 'response',
       })
       .pipe(
         map((response) => {
           const body = response.body as { authenticated: boolean };
           this.setAuthChange(body.authenticated);
+          this._cookie.set('authenticated', body.authenticated.toString());
           return body;
         }),
         catchError((err) => {

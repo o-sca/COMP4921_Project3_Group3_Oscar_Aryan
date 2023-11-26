@@ -7,9 +7,7 @@ export const authInterceptor = (
 ): Observable<HttpEvent<unknown>> => {
   req = req.clone({
     withCredentials: true,
-    headers: req.headers
-      .set('Content-Type', 'application/json')
-      .append('ngrok-skip-browser-warning', 'true'),
+    headers: req.headers.set('ngrok-skip-browser-warning', 'true'),
   });
   return next(req);
 };
