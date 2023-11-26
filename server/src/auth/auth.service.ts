@@ -46,9 +46,13 @@ export class AuthService {
       );
     }
 
-    delete user.password;
-
-    const token = await this.jwt.signAsync({ user });
+    const token = await this.jwt.signAsync({
+      id: user.id,
+      email: user.email,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      profile_pic_url: user.profile_pic_url,
+    });
 
     res.cookie(this.config.get<string>('TOKEN_NAME', 'aryan.sid'), token, {
       httpOnly: this.isProduction ?? false,
