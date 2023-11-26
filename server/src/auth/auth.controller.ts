@@ -8,12 +8,12 @@ import {
   Response as Res,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard, ReqUser } from '../common';
+import { AuthGuard, Cookies, ReqUser } from '../common';
 import { AuthService } from './auth.service';
 import { SignInDto, SignUpDto } from './dto';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
-import { TokenCookie } from 'src/common/decorators/token-cookie.decorator';
+import { ParseTokenPipe } from 'src/common/pipes';
 
 @Controller('auth')
 export class AuthController {
@@ -62,7 +62,7 @@ export class AuthController {
       'Signs out the user. By destroying Session. and redirect user to root.',
   })
   signOut(
-    @TokenCookie() token: string,
+    @Cookies(ParseTokenPipe) token: string,
     @Res({ passthrough: true }) res: Response,
   ) {
     return this.authService.signOut(token, res);
@@ -85,7 +85,7 @@ export class AuthController {
   })
   @HttpCode(HttpStatus.OK)
   @Get('session')
-  session(@TokenCookie() token: string) {
+  session(@Cookies(ParseTokenPipe) token: string) {
     return this.authService.session(token);
   }
 }
