@@ -113,14 +113,20 @@ export class AuthService {
     }
   }
 
-  async session(token: string) {
+  async session(token: string, res: Response) {
     if (!token) {
+      res.clearCookie(this.config.get('TOKEN_NAME', 'aryan.sid'), {
+        path: '/',
+      });
       return { authenticated: false };
     }
     try {
       await this.jwt.verifyAsync(token);
       return { authenticated: true };
     } catch (err) {
+      res.clearCookie(this.config.get('TOKEN_NAME', 'aryan.sid'), {
+        path: '/',
+      });
       return { authenticated: false };
     }
   }

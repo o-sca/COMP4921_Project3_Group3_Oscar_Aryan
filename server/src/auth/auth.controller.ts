@@ -85,7 +85,10 @@ export class AuthController {
   })
   @HttpCode(HttpStatus.OK)
   @Get('session')
-  session(@Cookies(ParseTokenPipe) token: string) {
-    return this.authService.session(token);
+  session(
+    @Cookies(ParseTokenPipe) token: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.authService.session(token, res);
   }
 }
