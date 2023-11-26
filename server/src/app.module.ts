@@ -9,6 +9,7 @@ import { NotFoundExceptionFilter } from './common';
 import { HealthModule } from './health/health.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { StorageModule } from './storage/storage.module';
+import { FriendModule } from './friend/friend.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { StorageModule } from './storage/storage.module';
     AuthModule,
     StorageModule,
     CloudinaryModule,
+    FriendModule,
   ],
   controllers: [AppController],
   providers: [
