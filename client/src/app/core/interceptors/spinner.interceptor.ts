@@ -17,16 +17,16 @@ export const spinnerInterceptor = (
   spinnerService.show();
 
   return next(req).pipe(
-    tap(
-      (event: HttpEvent<unknown>) => {
+    tap({
+      next: (event: HttpEvent<unknown>) => {
         if (event instanceof HttpResponse) {
           spinnerService.hide();
         }
       },
-      (err) => {
+      error: (err) => {
         console.error(err);
         spinnerService.hide();
       },
-    ),
+    }),
   );
 };
