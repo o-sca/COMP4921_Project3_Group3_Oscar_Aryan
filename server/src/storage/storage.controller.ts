@@ -4,6 +4,7 @@ import {
   HttpStatus,
   ParseFilePipeBuilder,
   Post,
+  Res,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -12,6 +13,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard, ReqUser } from '../common';
 import { StorageService } from './storage.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 
 @ApiTags('Storage Controller')
 @UseGuards(AuthGuard)
@@ -34,7 +36,8 @@ export class StorageController {
         .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY }),
     )
     file: Express.Multer.File,
+    @Res({ passthrough: true }) res: Response,
   ) {
-    return await this.storageService.uploadAvatar(userId, file);
+    return await this.storageService.uploadAvatar(userId, file, res);
   }
 }
