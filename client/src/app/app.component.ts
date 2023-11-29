@@ -23,6 +23,10 @@ export class AppComponent implements OnInit {
   constructor(private auth: AuthService) {}
 
   ngOnInit(): void {
-    this.auth.checkAuthenticated().subscribe();
+    this.auth.checkAuthenticated().subscribe({
+      error: () => {
+        window.location.reload();
+      },
+    });
   }
 }
