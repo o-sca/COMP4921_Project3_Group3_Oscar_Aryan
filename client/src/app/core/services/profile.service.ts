@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, throwError } from 'rxjs';
 import { UtilityService } from './utility.service';
-import { ProfileResponse } from '../schemas/profile.schema';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
@@ -26,8 +25,10 @@ export class ProfileService {
       })
       .pipe(
         map((response) => {
-          const body = response.body as ProfileResponse;
-          return body;
+          if (response.ok) {
+            return true;
+          }
+          return false;
         }),
         catchError((err) => {
           return throwError(() => err);

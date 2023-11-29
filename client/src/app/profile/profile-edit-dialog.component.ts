@@ -28,7 +28,14 @@ export class ProfileEditDialogComponent {
 
   updateProfilePic(file?: File) {
     if (!file) return;
-    this.profile.uploadProfilePic(file).subscribe();
+    this.profile.uploadProfilePic(file).subscribe({
+      next: (success) => {
+        if (success) {
+          window.location.reload();
+        }
+        return;
+      },
+    });
   }
 
   selectFile(event: Event) {
