@@ -137,8 +137,10 @@ export class AuthService {
           }
           return body;
         }),
-        catchError((err) => {
-          return throwError(() => err);
+        catchError(() => {
+          this.setAuthChange(false);
+          this._cookie.set('authenticated', 'false');
+          return throwError(() => false);
         }),
       );
   }
@@ -156,8 +158,10 @@ export class AuthService {
           this._cookie.set('authenticated', body.authenticated.toString());
           return body;
         }),
-        catchError((err) => {
-          return throwError(() => err);
+        catchError(() => {
+          this.setAuthChange(false);
+          this._cookie.set('authenticated', 'false');
+          return throwError(() => false);
         }),
       );
   }
