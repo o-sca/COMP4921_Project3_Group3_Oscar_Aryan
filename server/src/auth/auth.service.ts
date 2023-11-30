@@ -109,6 +109,9 @@ export class AuthService {
         // token already exists
         return;
       }
+      res.clearCookie(this.config.get('TOKEN_NAME', 'aryan.sid'), {
+        path: '/',
+      });
       throw new InternalServerErrorException(err.message);
     }
   }
