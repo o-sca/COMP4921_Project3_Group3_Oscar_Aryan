@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { join } from 'path';
 import { cwd } from 'process';
-import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { NotFoundExceptionFilter } from './common';
@@ -24,7 +23,6 @@ import { FriendModule } from './friend/friend.module';
     CloudinaryModule,
     FriendModule,
   ],
-  controllers: [AppController],
   providers: [
     {
       provide: 'APP_FILTER',
