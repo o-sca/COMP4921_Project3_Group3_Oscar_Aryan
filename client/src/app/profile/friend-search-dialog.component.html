@@ -1,0 +1,27 @@
+@if(users.length > 0) {
+<div class="mat-elevation-z8">
+  <h5>Search Result</h5>
+  <mat-list>
+    @for (user of users; track user) {
+    <mat-list-item class="suggestion-list-item">
+      <img matListItemAvatar src="{{ user.profile_pic_url }}" />
+      <span matListItemTitle>{{ user.first_name }} {{ user.last_name }}</span>
+      <span matListItemLine>
+        {{ user.email }}
+      </span>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="sendFriendRequest(user)"
+      >
+        Add
+      </button>
+    </mat-list-item>
+    }
+  </mat-list>
+</div>
+} @else {
+<div class="mat-elevation-z8" #noResults>
+  <p>No results...</p>
+</div>
+}

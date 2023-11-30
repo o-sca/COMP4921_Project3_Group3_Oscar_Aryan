@@ -9,20 +9,27 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
 import {
   MatPaginator,
   MatPaginatorIntl,
   MatPaginatorModule,
 } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs';
-import { Friend } from '../core/schemas/friends.schema';
+import { Friend, FriendSuggestion } from '../core/schemas/friends.schema';
+import { InvitationStatus } from '../core/schemas/invitation-status';
 import { AuthService } from '../core/services/auth.service';
 import { FriendService } from '../core/services/friend.service';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ProfileEditDialogComponent } from './profile-edit-dialog.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { FriendSearchDialogComponent } from './friend-search-dialog.component';
 
 @Component({
   selector: 'app-profile',
@@ -32,9 +39,13 @@ import { ProfileEditDialogComponent } from './profile-edit-dialog.component';
     MatButtonModule,
     MatCardModule,
     MatDialogModule,
+    MatFormFieldModule,
+    MatListModule,
     MatIconModule,
+    MatInputModule,
     MatTableModule,
     MatPaginatorModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
@@ -52,12 +63,18 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
   friendsDataSource: MatTableDataSource<Friend>;
   friendsDisplayColumns: string[];
 
+  suggestions: FriendSuggestion[];
+
+  isSearchInputVisible: boolean;
+  searchInput: FormControl<string>;
+
   constructor(
     private auth: AuthService,
     private friend: FriendService,
     private route: ActivatedRoute,
     private changeDetector: ChangeDetectorRef,
     public dialog: MatDialog,
+    private snackBar: MatSnackBar,
   ) {
     this.firstName = '';
     this.email = '';
@@ -82,6 +99,13 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
       'last_name',
       'status',
     ];
+
+    this.suggestions = [];
+    this.isSearchInputVisible = false;
+    this.searchInput = new FormControl<string>('', {
+      nonNullable: true,
+    });
+
     this.friendsPaginator = new MatPaginator(
       new MatPaginatorIntl(),
       this.changeDetector,
@@ -106,9 +130,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
         this.email = response.email;
         this.profilePicUrl = response.profile_pic_url;
       },
-      error(err) {
-        console.error(err);
-      },
     });
 
     this.friend.getFriends().subscribe({
@@ -116,8 +137,11 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
         this.requestDataSource.data = response.requests;
         this.friendsDataSource.data = response.friends;
       },
-      error: (err) => {
-        console.error(err);
+    });
+
+    this.friend.suggestFriends().subscribe({
+      next: (suggestions) => {
+        this.suggestions = suggestions;
       },
     });
   }
@@ -136,16 +160,100 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
 
   acceptFriend(friend: Friend) {
     this.friend.acceptFriend(friend).subscribe({
-      next: () => {
-        this.requestDataSource.data = this.requestDataSource.data.filter(
-          (f) => f.id !== friend.id,
-        );
-        this.friendsDataSource.data.push(friend);
+      next: (success) => {
+        if (success) {
+          const removeIndex = this.requestDataSource.data.indexOf(friend);
+          this.requestDataSource.data.splice(removeIndex, 1);
+          this.requestDataSource.data = [...this.requestDataSource.data];
+
+          friend.invitation_status = InvitationStatus.ACCEPTED;
+
+          this.friendsDataSource.data.push(friend);
+          this.friendsDataSource.data = [...this.friendsDataSource.data];
+          return;
+        }
+        return this.openSnackBar();
       },
     });
   }
 
   declineFriend(friend: Friend) {
-    this.friend.rejectFriend(friend).subscribe();
+    this.friend.rejectFriend(friend).subscribe({
+      next: (success) => {
+        if (success) {
+          const removeIndex = this.requestDataSource.data.indexOf(friend);
+          this.requestDataSource.data.splice(removeIndex, 1);
+          this.requestDataSource.data = [...this.requestDataSource.data];
+          return;
+        }
+        return this.openSnackBar();
+      },
+    });
+  }
+
+  removeFriend(friend: Friend) {
+    this.friend.removeFriend(friend).subscribe({
+      next: (success) => {
+        if (success) {
+          const removeIndex = this.friendsDataSource.data.indexOf(friend);
+          this.friendsDataSource.data.splice(removeIndex, 1);
+          this.friendsDataSource.data = [...this.friendsDataSource.data];
+          return;
+        }
+        return this.openSnackBar();
+      },
+    });
+  }
+
+  removeRequest(friend: Friend) {
+    this.friend.removeRequest(friend).subscribe({
+      next: (success) => {
+        if (success) {
+          const removeIndex = this.friendsDataSource.data.indexOf(friend);
+          this.friendsDataSource.data.splice(removeIndex, 1);
+          this.friendsDataSource.data = [...this.friendsDataSource.data];
+          return;
+        }
+        return this.openSnackBar();
+      },
+    });
+  }
+
+  sendFriendRequest(suggestion: FriendSuggestion) {
+    this.friend.sendFriendRequest(suggestion.id).subscribe({
+      next: (success) => {
+        if (success) {
+          const removeIndex = this.suggestions.indexOf(suggestion);
+          this.suggestions.splice(removeIndex, 1);
+          this.suggestions = [...this.suggestions];
+          return;
+        }
+        return this.openSnackBar();
+      },
+    });
+  }
+
+  searchFriend() {
+    if (!this.searchInput.value) {
+      return this.openSnackBar('You forgot to enter a search term, silly');
+    }
+    this.friend.searchFriend(this.searchInput.value).subscribe({
+      next: (results) => {
+        this.dialog.open(FriendSearchDialogComponent, {
+          data: results,
+        });
+      },
+      error: (err) => {
+        return this.openSnackBar(err.error.message);
+      },
+    });
+  }
+
+  toggleSearchInput() {
+    this.isSearchInputVisible = !this.isSearchInputVisible;
+  }
+
+  private openSnackBar(message?: string) {
+    this.snackBar.open(message || 'Something went wrong', 'OK');
   }
 }
