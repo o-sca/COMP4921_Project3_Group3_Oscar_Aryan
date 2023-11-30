@@ -1,39 +1,79 @@
 import { Injectable } from '@nestjs/common';
-import { FRIEND_INVITATION_STATUS } from '@prisma/client';
+import { ConfigService } from '@nestjs/config';
+import { FRIEND_INVITATION_STATUS, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaFriendErrorHandler } from './friend-prisma-error.handler';
+import {
+  GetSuggestions,
+  GET_ALL_FRIENDS,
+  GET_SUGGESTIONS,
+} from './friend.raw-query';
 
 @Injectable()
 export class FriendService {
-  constructor(private prisma: PrismaService) {}
+  private readonly isProd: boolean;
+  private errorHandler: PrismaFriendErrorHandler;
+
+  constructor(
+    private prisma: PrismaService,
+    private config: ConfigService,
+  ) {
+    this.isProd =
+      this.config.get<string>('NODE_ENV', 'development') === 'production';
+    this.errorHandler = new PrismaFriendErrorHandler(this.isProd);
+  }
+
+  async getSuggestions(userId: number) {
+    try {
+      const suggestions = await this.prisma.$queryRaw<GetSuggestions>(
+        GET_SUGGESTIONS(userId),
+      );
+      return suggestions;
+    } catch (err) {
+      return this.errorHandler.handle(err);
+    }
+  }
+
+  async search(name: string) {
+    try {
+      const results = await this.prisma.user.findMany({
+        where: {
+          OR: [
+            { first_name: { contains: name } },
+            { last_name: { contains: name } },
+          ],
+        },
+        select: {
+          id: true,
+          first_name: true,
+          last_name: true,
+          email: true,
+          profile_pic_url: true,
+        },
+      });
+      return results;
+    } catch (err) {
+      return this.errorHandler.handle(err);
+    }
+  }
 
   async getAll(userId: number) {
     try {
-      const friends = await this.prisma.friend.findMany({
-        where: {
-          OR: [
-            {
-              sender_id: userId,
-            },
-            {
-              receiver_id: userId,
-            },
-          ],
-        },
-        include: {
-          receiver: {
-            select: {
-              first_name: true,
-              last_name: true,
-              profile_pic_url: true,
-            },
+      const friends = await this.prisma.$queryRaw<
+        Omit<
+          User & {
+            invitation_status: FRIEND_INVITATION_STATUS;
+            friend_id: number;
+            receiver_id: number;
+            sender_id: number;
+            friend_request_id: number;
           },
-        },
-      });
-      console.log(friends);
+          'password' | 'created_at' | 'updated_at'
+        >[]
+      >(GET_ALL_FRIENDS(userId));
       return friends;
     } catch (err) {
-      console.error(err);
-      return;
+      return this.errorHandler.handle(err);
     }
   }
 
@@ -52,8 +92,7 @@ export class FriendService {
       });
       return user;
     } catch (err) {
-      console.error(err);
-      return;
+      return this.errorHandler.handle(err);
     }
   }
 
@@ -67,8 +106,7 @@ export class FriendService {
         },
       });
     } catch (err) {
-      console.error(err);
-      return;
+      return this.errorHandler.handle(err);
     }
   }
 
@@ -82,8 +120,23 @@ export class FriendService {
       });
       return;
     } catch (err) {
-      console.error(err);
+      return this.errorHandler.handle(err);
+    }
+  }
+
+  async removeOne(userId: number, friendId: number) {
+    try {
+      await this.prisma.friend.deleteMany({
+        where: {
+          OR: [
+            { sender_id: userId, receiver_id: friendId },
+            { sender_id: friendId, receiver_id: userId },
+          ],
+        },
+      });
       return;
+    } catch (err) {
+      return this.errorHandler.handle(err);
     }
   }
 
@@ -97,8 +150,18 @@ export class FriendService {
       });
       return;
     } catch (err) {
-      console.error(err);
+      return this.errorHandler.handle(err);
+    }
+  }
+
+  async cancelOne(friendRequestId: number) {
+    try {
+      await this.prisma.friend.delete({
+        where: { id: friendRequestId },
+      });
       return;
+    } catch (err) {
+      return this.errorHandler.handle(err);
     }
   }
 }
