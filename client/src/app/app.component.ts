@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './core/layout/header/header.component';
+import { FullCalendarModule } from '@fullcalendar/angular';
 import { FooterComponent } from './core/layout/footer/footer.component';
+import { HeaderComponent } from './core/layout/header/header.component';
 import { AuthService } from './core/services/auth.service';
 
 @Component({
@@ -12,6 +13,7 @@ import { AuthService } from './core/services/auth.service';
     CommonModule,
     HeaderComponent,
     FooterComponent,
+    FullCalendarModule,
     RouterOutlet,
     RouterLink,
     RouterLinkActive,

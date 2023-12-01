@@ -3,7 +3,9 @@ import { Component } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { SpinnerService } from '../core/services/spinner.service';
-import { IgxCalendarComponent } from 'igniteui-angular';
+import { FullCalendarModule } from '@fullcalendar/angular';
+import { CalendarOptions } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
 
 @Component({
   selector: 'app-landing',
@@ -14,11 +16,18 @@ import { IgxCalendarComponent } from 'igniteui-angular';
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
-    IgxCalendarComponent,
+    FullCalendarModule,
   ],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.css',
 })
 export class LandingComponent {
-  constructor(public spinner: SpinnerService) {}
+  calendarOptions: CalendarOptions;
+
+  constructor(public spinner: SpinnerService) {
+    this.calendarOptions = {
+      initialView: 'dayGridMonth',
+      plugins: [dayGridPlugin],
+    };
+  }
 }
