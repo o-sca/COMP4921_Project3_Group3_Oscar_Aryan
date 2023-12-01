@@ -7,14 +7,33 @@ export const GET_SUGGESTIONS = (userId: number) => {
         CONCAT(u.first_name, " ", u.last_name) as name, 
         u.email, 
         u.profile_pic_url
-      FROM Friend f 
-      JOIN User u ON u.id = f.receiver_id 
-      WHERE NOT u.id = ${userId}
+      FROM User u
+      JOIN Friend f
+      ON u.id = f.receiver_id
+      WHERE u.id != ${userId}
       AND NOT u.id IN (SELECT f.receiver_id FROM Friend f WHERE f.sender_id = ${userId})
+      AND u.id NOT IN
+        (
+          SELECT
+            u.id
+          FROM User u
+          JOIN Friend f
+          ON u.id = f.receiver_id
+          WHERE f.sender_id = ${userId}
+          AND NOT f.invitation_status = "REJECTED"
+          UNION
+          SELECT
+            u.id
+          FROM User u
+          JOIN Friend f
+          ON u.id = f.sender_id
+          WHERE f.receiver_id = ${userId}
+          AND NOT f.invitation_status = "REJECTED"
+      )
       GROUP BY u.id
       ORDER BY COUNT(f.receiver_id) DESC
-      LIMIT 5;
-`;
+      LIMIT 5
+      `;
 };
 
 export type GetSuggestions = {

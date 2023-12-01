@@ -14,10 +14,7 @@ export class FriendService {
   private readonly isProd: boolean;
   private errorHandler: PrismaFriendErrorHandler;
 
-  constructor(
-    private prisma: PrismaService,
-    private config: ConfigService,
-  ) {
+  constructor(private prisma: PrismaService, private config: ConfigService) {
     this.isProd =
       this.config.get<string>('NODE_ENV', 'development') === 'production';
     this.errorHandler = new PrismaFriendErrorHandler(this.isProd);
