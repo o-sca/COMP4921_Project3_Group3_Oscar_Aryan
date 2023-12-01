@@ -8,7 +8,12 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { AuthedGuard } from './core/guards/authed.guard';
 
 export const routes: Routes = [
-  { path: '', component: LandingComponent, pathMatch: 'full' },
+  {
+    path: '',
+    component: LandingComponent,
+    pathMatch: 'full',
+    canActivate: [AuthGuard],
+  },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
   {
     path: 'signin',
