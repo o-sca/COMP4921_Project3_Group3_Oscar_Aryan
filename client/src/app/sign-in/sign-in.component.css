@@ -9,12 +9,16 @@ h4 {
   width: 50%;
 }
 
-.error-message-container {
-  color: red;
-}
-
 .signin-container {
   margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.error-message-container {
+  margin-top: 10px;
+  color: red;
 }
 
 .router-link {

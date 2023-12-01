@@ -1,51 +1,42 @@
-<div class="signup-container">
+<div class="signup-container" [formGroup]="signUpForm">
   <h4>Sign Up</h4>
-  <div appearance="fill" [formGroup]="signUpForm">
-    <mat-form-field>
-      <mat-label>Email</mat-label>
-      <input
-        matInput
-        placeholder="aryan@scheduler.sh"
-        formControlName="email"
-        required
-      />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>First Name</mat-label>
-      <input
-        matInput
-        placeholder="Aryan"
-        formControlName="firstName"
-        required
-      />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Last Name</mat-label>
-      <input matInput placeholder="Rand" formControlName="lastName" required />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Password</mat-label>
-      <input matInput type="password" formControlName="password" required />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Confirm Password</mat-label>
-      <input
-        matInput
-        type="password"
-        formControlName="confirmPassword"
-        required
-      />
-    </mat-form-field>
-    <button mat-raised-button color="primary" (click)="signUp()">
-      Sign Up
-    </button>
-    <div class="error-message-container" *ngIf="registrationError">
-      {{ errorMessage }}
-    </div>
-    <a class="router-link" routerLink="/signin"
-      >Already have an account? Sign in</a
-    >
-    <mat-spinner [diameter]="50" *ngIf="spinner.visibility"></mat-spinner>
-    <router-outlet></router-outlet>
+  <mat-form-field appearance="fill">
+    <mat-label>Email</mat-label>
+    <input
+      matInput
+      placeholder="aryan@scheduler.sh"
+      formControlName="email"
+      required
+    />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>First Name</mat-label>
+    <input matInput placeholder="Aryan" formControlName="firstName" required />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Last Name</mat-label>
+    <input matInput placeholder="Rand" formControlName="lastName" required />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Password</mat-label>
+    <input matInput type="password" formControlName="password" required />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Confirm Password</mat-label>
+    <input
+      matInput
+      type="password"
+      formControlName="confirmPassword"
+      required
+    />
+  </mat-form-field>
+  <button mat-raised-button color="primary" (click)="signUp()">Sign Up</button>
+  <div class="error-message-container" *ngIf="registrationError">
+    {{ errorMessage }}
   </div>
+  <a class="router-link" routerLink="/signin"
+    >Already have an account? Sign in</a
+  >
+  <mat-spinner [diameter]="50" *ngIf="spinner.visibility"></mat-spinner>
+  <router-outlet></router-outlet>
 </div>

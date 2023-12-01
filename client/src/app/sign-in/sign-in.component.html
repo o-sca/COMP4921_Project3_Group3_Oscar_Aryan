@@ -32,8 +32,8 @@
   <div class="error-message-container" *ngIf="authError">
     {{ errorMessage }}
   </div>
+  <a class="router-link" routerLink="/signup">Create an account</a>
+  <a class="router-link" routerLink="/forgot">Forgot password?</a>
 </div>
-<a class="router-link" routerLink="/signup">Create an account</a>
-<a class="router-link" routerLink="/forgot">Forgot password?</a>
 <mat-spinner [diameter]="50" *ngIf="spinner.visibility"></mat-spinner>
 <router-outlet></router-outlet>
