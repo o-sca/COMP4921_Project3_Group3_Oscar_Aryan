@@ -6,8 +6,8 @@ import {
   MatDialogTitle,
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FriendService } from '../core/services/friend.service';
-import { FriendProfile } from '../core/schemas/friends.schema';
+import { FriendService } from '../../core/services/friend.service';
+import { FriendProfile } from '../../core/schemas/friends.schema';
 import { MatListModule } from '@angular/material/list';
 
 @Component({

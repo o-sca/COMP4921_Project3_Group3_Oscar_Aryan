@@ -25,11 +25,11 @@ import { Friend, FriendSuggestion } from '../core/schemas/friends.schema';
 import { InvitationStatus } from '../core/schemas/invitation-status';
 import { AuthService } from '../core/services/auth.service';
 import { FriendService } from '../core/services/friend.service';
-import { ProfileEditDialogComponent } from './profile-edit-dialog.component';
+import { ProfileEditDialogComponent } from './dialogs/profile-edit-dialog.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
-import { FriendSearchDialogComponent } from './friend-search-dialog.component';
+import { FriendSearchDialogComponent } from './dialogs/friend-search-dialog.component';
 
 @Component({
   selector: 'app-profile',

@@ -6,7 +6,7 @@ import {
   MatDialogTitle,
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ProfileService } from '../core/services/profile.service';
+import { ProfileService } from '../../core/services/profile.service';
 
 @Component({
   templateUrl: './profile-edit-dialog.component.html',
