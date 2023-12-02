@@ -23,8 +23,7 @@ export const spinnerInterceptor = (
           spinnerService.hide();
         }
       },
-      error: (err) => {
-        console.error(err);
+      error: () => {
         spinnerService.hide();
       },
     }),
