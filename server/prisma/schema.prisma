@@ -61,11 +61,13 @@ model Event {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
+  title String
+
   start_date_time DateTime
   end_date_time   DateTime
 
-  color   String
-  deleted DateTime
+  color   String  @default("#3788d8")
+  deleted Boolean @default(false)
 
   event_owner_id Int
   event_owner    User @relation(fields: [event_owner_id], references: [id], onDelete: Cascade)
