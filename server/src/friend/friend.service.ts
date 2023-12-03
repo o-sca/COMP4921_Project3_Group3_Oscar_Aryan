@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { FRIEND_INVITATION_STATUS, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { PrismaFriendErrorHandler } from './friend-prisma-error.handler';
+import { PrismaErrorHandler } from '../common/prisma-error.handler';
 import {
   GetSuggestions,
   GET_ALL_FRIENDS,
@@ -13,15 +13,12 @@ import {
 @Injectable()
 export class FriendService {
   private readonly isProd: boolean;
-  private errorHandler: PrismaFriendErrorHandler;
+  private errorHandler: PrismaErrorHandler;
 
-  constructor(
-    private prisma: PrismaService,
-    private config: ConfigService,
-  ) {
+  constructor(private prisma: PrismaService, private config: ConfigService) {
     this.isProd =
       this.config.get<string>('NODE_ENV', 'development') === 'production';
-    this.errorHandler = new PrismaFriendErrorHandler(this.isProd);
+    this.errorHandler = new PrismaErrorHandler(this.isProd);
   }
 
   async getSuggestions(userId: number) {

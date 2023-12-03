@@ -1,7 +1,7 @@
 import { HttpException, InternalServerErrorException } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
-export class PrismaFriendErrorHandler {
+export class PrismaErrorHandler {
   constructor(private isProd: boolean) {}
 
   handle(err: PrismaClientKnownRequestError) {
