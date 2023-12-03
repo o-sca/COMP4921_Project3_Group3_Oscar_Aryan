@@ -2,7 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UtilityService } from './utility.service';
 import { catchError, map, throwError } from 'rxjs';
-import { Friend, FriendSuggestion } from '../schemas/friends.schema';
+import {
+  Friend,
+  FriendProfile,
+  FriendSuggestion,
+} from '../schemas/friends.schema';
 import { JSON_HEADERS } from './http-header';
 
 @Injectable({ providedIn: 'root' })
@@ -185,6 +189,21 @@ export class FriendService {
       );
   }
 
+  findFriend(name: string) {
+    return this.http
+      .get(this._baseUrl + `/friends/find?name=${name}`, {
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          return response.body as FriendProfile[];
+        }),
+        catchError((err) => {
+          return throwError(() => err);
+        }),
+      );
+  }
+
   searchFriend(name: string) {
     return this.http
       .get(this._baseUrl + `/friends/search?name=${name}`, {
@@ -192,7 +211,7 @@ export class FriendService {
       })
       .pipe(
         map((response) => {
-          return response.body;
+          return response.body as FriendProfile[];
         }),
         catchError((err) => {
           return throwError(() => err);

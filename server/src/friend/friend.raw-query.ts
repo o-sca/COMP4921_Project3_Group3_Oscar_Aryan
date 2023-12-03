@@ -78,3 +78,35 @@ export const GET_ALL_FRIENDS = (userId: number) => {
         AND NOT f.invitation_status = ${FRIEND_INVITATION_STATUS.REJECTED}
       `;
 };
+
+export const QUERY_FRIENDS = (searchTerm: string, userId: number) => {
+  return Prisma.sql`
+    SELECT * FROM (
+    SELECT
+      u.id,
+      u.first_name,
+      u.last_name,
+      u.email,
+      u.profile_pic_url
+    FROM User u
+    JOIN Friend f
+    ON u.id = f.receiver_id
+    WHERE f.sender_id = ${userId}
+    AND f.invitation_status = ${FRIEND_INVITATION_STATUS.ACCEPTED}
+    UNION
+    SELECT
+      u.id,
+      u.first_name,
+      u.last_name,
+      u.email,
+      u.profile_pic_url
+    FROM User u
+    JOIN Friend f
+    ON u.id = f.sender_id
+    WHERE f.receiver_id = ${userId}
+    AND f.invitation_status = ${FRIEND_INVITATION_STATUS.ACCEPTED}
+    ) friends
+    WHERE friends.first_name LIKE CONCAT('%', ${searchTerm}, '%')
+    OR friends.last_name LIKE CONCAT('%', ${searchTerm}, '%')
+  `;
+};

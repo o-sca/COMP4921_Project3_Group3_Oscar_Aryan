@@ -7,6 +7,7 @@ import {
   GetSuggestions,
   GET_ALL_FRIENDS,
   GET_SUGGESTIONS,
+  QUERY_FRIENDS,
 } from './friend.raw-query';
 
 @Injectable()
@@ -31,7 +32,18 @@ export class FriendService {
     }
   }
 
-  async search(name: string) {
+  async search(name: string, userId: number) {
+    try {
+      const results = await this.prisma.$queryRaw<GetSuggestions>(
+        QUERY_FRIENDS(name, userId),
+      );
+      return results;
+    } catch (err) {
+      return this.errorHandler.handle(err);
+    }
+  }
+
+  async find(name: string) {
     try {
       const results = await this.prisma.user.findMany({
         where: {

@@ -233,11 +233,11 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  searchFriend() {
+  findFriend() {
     if (!this.searchInput.value) {
       return this.openSnackBar('You forgot to enter a search term, silly');
     }
-    this.friend.searchFriend(this.searchInput.value).subscribe({
+    this.friend.findFriend(this.searchInput.value).subscribe({
       next: (results) => {
         this.dialog.open(FriendSearchDialogComponent, {
           data: results,

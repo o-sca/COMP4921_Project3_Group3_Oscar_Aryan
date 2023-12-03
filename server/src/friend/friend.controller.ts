@@ -9,20 +9,24 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
-import { AuthGuard, ReqUser } from 'src/common';
+import { ReqUser } from 'src/common';
 import { FriendService } from './friend.service';
 
-@UseGuards(AuthGuard)
 @Controller('friends')
 export class FriendController {
   constructor(private friend: FriendService) {}
 
   @HttpCode(HttpStatus.OK)
+  @Get('find')
+  find(@Query('name') name: string) {
+    return this.friend.find(name);
+  }
+
+  @HttpCode(HttpStatus.OK)
   @Get('search')
-  search(@Query('name') name: string) {
-    return this.friend.search(name);
+  search(@ReqUser('id') userId: number, @Query('name') name: string) {
+    return this.friend.search(name, userId);
   }
 
   @HttpCode(HttpStatus.OK)
