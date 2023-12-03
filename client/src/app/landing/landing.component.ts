@@ -11,10 +11,12 @@ import {
 } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { SpinnerService } from '../core/services/spinner.service';
+import listPlugin from '@fullcalendar/list';
+import timeGridPlugin from '@fullcalendar/timegrid';
 import { CreateEventDialogComponent } from '../core/layout/dialogs/calendar/create-event/create-event-dialog.component';
-import { EventService } from '../core/services/event.service';
 import { ShowEventDialogComponent } from '../core/layout/dialogs/calendar/show-event/show-events-dialog.component';
+import { EventService } from '../core/services/event.service';
+import { SpinnerService } from '../core/services/spinner.service';
 
 @Component({
   selector: 'app-landing',
@@ -40,7 +42,7 @@ export class LandingComponent implements OnInit {
   ) {
     this.calendarOptions = {
       initialView: 'dayGridMonth',
-      plugins: [dayGridPlugin, interactionPlugin],
+      plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       selectable: true,
       editable: true,
       headerToolbar: {
