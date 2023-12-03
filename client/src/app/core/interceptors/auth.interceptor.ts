@@ -1,5 +1,5 @@
 import { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 export const authInterceptor = (
   req: HttpRequest<unknown>,
@@ -9,5 +9,11 @@ export const authInterceptor = (
     withCredentials: true,
     headers: req.headers.set('ngrok-skip-browser-warning', 'true'),
   });
-  return next(req);
+  return next(req).pipe(
+    tap({
+      error: () => {
+        window.location.href = '/signin';
+      },
+    }),
+  );
 };
