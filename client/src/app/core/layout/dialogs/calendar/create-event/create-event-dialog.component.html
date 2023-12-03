@@ -1,0 +1,108 @@
+<div class="create-event-container">
+  <div class="event-title-container">
+    <div class="dialog-header">
+      <mat-icon>event</mat-icon>
+      <h2>Create Event</h2>
+    </div>
+    <mat-form-field appearance="fill">
+      <mat-label>Event Title</mat-label>
+      <input
+        matInput
+        placeholder="Finish DB Project 3"
+        [formControl]="eventTitle"
+        required
+      />
+    </mat-form-field>
+  </div>
+  <div class="schedule-container">
+    <div class="dialog-header">
+      <mat-icon>schedule</mat-icon>
+      <h2>Schedule</h2>
+    </div>
+    <div class="datepicker-container">
+      <mat-form-field>
+        <mat-label>Start Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="startDatepicker"
+          [formControl]="startDate"
+          required
+        />
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="startDatepicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #startDatepicker> </mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>End Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="endDatepicker"
+          [formControl]="endDate"
+          required
+        />
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="endDatepicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #endDatepicker>
+          <mat-datepicker-actions>
+            <button mat-button matDatepickerCancel>Cancel</button>
+            <button mat-raised-button color="primary" matDatepickerApply>
+              Apply
+            </button>
+          </mat-datepicker-actions>
+        </mat-datepicker>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="add-friends-container">
+    <div class="dialog-header">
+      <mat-icon>group_add</mat-icon>
+      <h2>Add Friends</h2>
+    </div>
+    <div class="search-friend">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Search for friends"
+          [formControl]="searchFriendInput"
+        />
+      </mat-form-field>
+      <button mat-mini-fab color="primary" (click)="searchFriend()">
+        <mat-icon>search</mat-icon>
+      </button>
+    </div>
+    @for (selected of selectedFriends; track selected) {
+    <div>{{ selected.first_name }} {{ selected.last_name }}</div>
+    }
+    <mat-selection-list #friendsSelected (selectionChange)="selected($event)">
+      @for (friend of friends; track friend) {
+      <mat-list-option class="friend-row" [value]="friend">
+        <div class="friend-info">
+          <mat-icon>person</mat-icon>
+          <div class="friend-name">
+            {{ friend.first_name }} {{ friend.last_name }}
+          </div>
+        </div>
+      </mat-list-option>
+      }
+    </mat-selection-list>
+  </div>
+  <mat-dialog-actions>
+    <button
+      mat-dialog-close
+      mat-raised-button
+      color="primary"
+      (click)="createEvent()"
+    >
+      Create
+    </button>
+  </mat-dialog-actions>
+  @if (spinner.visibility) {
+  <mat-spinner [diameter]="50"></mat-spinner>
+  }
+</div>

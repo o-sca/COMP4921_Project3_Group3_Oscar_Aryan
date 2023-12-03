@@ -1,0 +1,59 @@
+.dialog-header {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.create-event-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  row-gap: 20px;
+}
+
+.event-title-container,
+.event-title-container mat-form-field {
+  width: 100%;
+}
+
+.schedule-container {
+  width: 100%;
+}
+
+.datepicker-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  column-gap: 20px;
+}
+
+.add-friends-container {
+  display: flex;
+  flex-direction: column;
+  align-content: space-evenly;
+  width: 100%;
+}
+
+.add-friends-container mat-form-field {
+  width: 80%;
+}
+
+.search-friend button {
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+.friend-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.friend-name {
+  justify-self: self-start;
+}
+
+.friend-info {
+  display: flex;
+}
