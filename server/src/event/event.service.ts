@@ -10,7 +10,18 @@ export class EventService {
     try {
       const events = await this.prisma.event.findMany({
         where: {
-          event_owner_id: userId,
+          OR: [
+            {
+              event_owner_id: userId,
+            },
+            {
+              Event_Attendance: {
+                some: {
+                  user_attende_id: userId,
+                },
+              },
+            },
+          ],
         },
         include: {
           Event_Attendance: true,
@@ -30,7 +41,17 @@ export class EventService {
           id: eventId,
         },
         include: {
-          Event_Attendance: true,
+          Event_Attendance: {
+            include: {
+              user_attende: {
+                select: {
+                  id: true,
+                  first_name: true,
+                  last_name: true,
+                },
+              },
+            },
+          },
         },
       });
       if (event.deleted) {
