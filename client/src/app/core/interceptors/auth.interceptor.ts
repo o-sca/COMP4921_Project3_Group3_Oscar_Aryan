@@ -1,4 +1,9 @@
-import { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandlerFn,
+  HttpRequest,
+} from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 
 export const authInterceptor = (
@@ -11,8 +16,10 @@ export const authInterceptor = (
   });
   return next(req).pipe(
     tap({
-      error: () => {
-        window.location.href = '/signin';
+      error: (err: HttpErrorResponse) => {
+        if (err.status === 401 || err.status === 403) {
+          window.location.href = '/signin';
+        }
       },
     }),
   );
