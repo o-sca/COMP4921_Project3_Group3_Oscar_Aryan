@@ -4,11 +4,12 @@ import { join } from 'path';
 import { cwd } from 'process';
 import { AuthModule } from './auth/auth.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
-import { NotFoundExceptionFilter } from './common';
+import { AuthGuard, NotFoundExceptionFilter } from './common';
 import { HealthModule } from './health/health.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { StorageModule } from './storage/storage.module';
 import { FriendModule } from './friend/friend.module';
+import { EventModule } from './event/event.module';
 
 @Module({
   imports: [
@@ -22,11 +23,16 @@ import { FriendModule } from './friend/friend.module';
     StorageModule,
     CloudinaryModule,
     FriendModule,
+    EventModule,
   ],
   providers: [
     {
       provide: 'APP_FILTER',
       useClass: NotFoundExceptionFilter,
+    },
+    {
+      provide: 'APP_GUARD',
+      useClass: AuthGuard,
     },
   ],
 })

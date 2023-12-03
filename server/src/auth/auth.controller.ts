@@ -8,7 +8,7 @@ import {
   Response as Res,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard, Cookies, ReqUser } from '../common';
+import { AuthGuard, Cookies, Public, ReqUser } from '../common';
 import { AuthService } from './auth.service';
 import { SignInDto, SignUpDto } from './dto';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
@@ -30,6 +30,7 @@ export class AuthController {
     type: SignInDto,
     description: 'User is loaded in Session',
   })
+  @Public()
   @Post('signin')
   async signIn(
     @Body() dto: SignInDto,
@@ -49,6 +50,7 @@ export class AuthController {
     type: SignUpDto,
     description: 'User is loaded in Session',
   })
+  @Public()
   @Post('signup')
   async signUp(@Body() dto: SignUpDto) {
     return this.authService.signUp(dto);
@@ -84,6 +86,7 @@ export class AuthController {
     description: 'Check if user is authenticated',
   })
   @HttpCode(HttpStatus.OK)
+  @Public()
   @Get('session')
   session(
     @Cookies(ParseTokenPipe) token: string,
