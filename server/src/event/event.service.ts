@@ -23,9 +23,29 @@ export class EventService {
     }
   }
 
+  async getOne(eventId: number) {
+    try {
+      const event = await this.prisma.event.findFirst({
+        where: {
+          id: eventId,
+        },
+        include: {
+          Event_Attendance: true,
+        },
+      });
+      if (event.deleted) {
+        return;
+      }
+      return event;
+    } catch (err) {
+      console.log(err);
+      throw new InternalServerErrorException();
+    }
+  }
+
   async create(userId: number, dto: CreateEventDto) {
     try {
-      await this.prisma.event.create({
+      const result = await this.prisma.event.create({
         data: {
           event_owner_id: userId,
           title: dto.eventTitle,
@@ -43,7 +63,7 @@ export class EventService {
           },
         },
       });
-      return;
+      return result;
     } catch (err) {
       console.log(err);
       throw new InternalServerErrorException();
