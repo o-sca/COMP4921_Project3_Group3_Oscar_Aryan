@@ -1,0 +1,10 @@
+.show-event {
+  padding: 20px;
+  width: 50vw;
+  display: flex;
+  flex-direction: column;
+}
+
+.show-event h2 {
+  justify-self: center;
+}

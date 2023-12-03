@@ -4,12 +4,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { FullCalendarModule } from '@fullcalendar/angular';
-import { CalendarOptions, DateSelectArg, EventInput } from '@fullcalendar/core';
+import {
+  CalendarOptions,
+  DateSelectArg,
+  EventClickArg,
+} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { SpinnerService } from '../core/services/spinner.service';
 import { CreateEventDialogComponent } from '../core/layout/dialogs/calendar/create-event/create-event-dialog.component';
 import { EventService } from '../core/services/event.service';
+import { ShowEventDialogComponent } from '../core/layout/dialogs/calendar/show-event/show-events-dialog.component';
 
 @Component({
   selector: 'app-landing',
@@ -43,22 +48,24 @@ export class LandingComponent implements OnInit {
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
       },
+      eventClick: this.handleEventClick.bind(this),
       select: this.handleDateSelect.bind(this),
     };
   }
 
   ngOnInit(): void {
-    const eventsToAdd: EventInput[] = [];
     this.event.getEvents().subscribe({
       next: (events) => {
-        events.forEach((event) => {
-          eventsToAdd.push({
+        this.calendarOptions.events = events.map((event) => {
+          return {
+            id: event.id.toString(),
             title: event.title,
             start: event.start_date_time,
             end: event.end_date_time,
-          });
+            eventColor: event.color,
+            interactive: true,
+          };
         });
-        this.calendarOptions.events = eventsToAdd;
       },
     });
   }
@@ -68,6 +75,14 @@ export class LandingComponent implements OnInit {
       data: {
         dateSelectInfo: selectInfo,
         calendarApi: selectInfo.view.calendar,
+      },
+    });
+  }
+
+  private handleEventClick(clickInfo: EventClickArg) {
+    this.dialog.open(ShowEventDialogComponent, {
+      data: {
+        id: clickInfo.event.id,
       },
     });
   }

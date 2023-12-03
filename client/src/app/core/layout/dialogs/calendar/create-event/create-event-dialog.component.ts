@@ -115,11 +115,12 @@ export class CreateEventDialogComponent {
         friendsSelected: this.selectedFriends,
       })
       .subscribe({
-        next: (success) => {
-          if (!success) {
+        next: (body) => {
+          if (!body) {
             return;
           }
           this.calendarApi.addEvent({
+            id: body.id.toString(),
             title: this.eventTitle.value,
             start: this.startDate.value,
             end: this.endDate.value,

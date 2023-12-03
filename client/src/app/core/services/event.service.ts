@@ -17,6 +17,19 @@ export class EventService {
     this._baseUrl = this.utility.getApiUrl();
   }
 
+  getEvent(eventId: number) {
+    return this.http
+      .get(this._baseUrl + '/event/' + eventId, { observe: 'response' })
+      .pipe(
+        map((response) => {
+          return response.body as Event;
+        }),
+        catchError((err) => {
+          return throwError(() => err);
+        }),
+      );
+  }
+
   getEvents() {
     return this.http
       .get(this._baseUrl + '/event', { observe: 'response' })
@@ -54,10 +67,7 @@ export class EventService {
       )
       .pipe(
         map((response) => {
-          if (response.ok) {
-            return true;
-          }
-          return false;
+          return response.body as { id: number };
         }),
         catchError((err) => {
           return throwError(() => err);
