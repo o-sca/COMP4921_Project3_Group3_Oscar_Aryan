@@ -64,7 +64,7 @@ export class LandingComponent implements OnInit {
             title: event.title,
             start: event.start_date_time,
             end: event.end_date_time,
-            eventColor: event.color,
+            color: event.color,
             interactive: true,
           };
         });

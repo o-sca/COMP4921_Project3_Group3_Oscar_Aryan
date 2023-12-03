@@ -45,11 +45,13 @@ export class EventService {
 
   create({
     eventTitle,
+    color,
     startDate,
     endDate,
     friendsSelected,
   }: {
     eventTitle: string;
+    color: string;
     startDate: Date;
     endDate: Date;
     friendsSelected: Set<FriendProfile>;
@@ -59,6 +61,7 @@ export class EventService {
         this._baseUrl + '/event/create',
         {
           eventTitle: eventTitle,
+          color: color,
           startDate: startDate.toISOString(),
           endDate: endDate.toISOString(),
           friends: Array.from(friendsSelected),

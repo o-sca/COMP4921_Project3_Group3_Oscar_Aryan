@@ -12,6 +12,9 @@ export class CreateEventDto {
   @IsString()
   eventTitle: string;
 
+  @IsString()
+  color: string;
+
   @IsDateString()
   startDate: string;
 

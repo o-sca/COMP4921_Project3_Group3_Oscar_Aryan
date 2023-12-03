@@ -7,7 +7,6 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: flex-start;
   row-gap: 20px;
 }
@@ -56,4 +55,8 @@
 
 .friend-info {
   display: flex;
+}
+
+mat-dialog-actions {
+  justify-content: end;
 }

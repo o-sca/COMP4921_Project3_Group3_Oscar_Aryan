@@ -25,6 +25,7 @@ import { SpinnerService } from '../../../../services/spinner.service';
 import { FriendService } from '../../../../services/friend.service';
 import { FriendProfile } from '../../../../schemas/friends.schema';
 import { EventService } from '../../../../services/event.service';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   templateUrl: './create-event-dialog.component.html',
@@ -40,6 +41,7 @@ import { EventService } from '../../../../services/event.service';
     MatFormFieldModule,
     MatListModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
     ReactiveFormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
@@ -56,9 +58,11 @@ import { EventService } from '../../../../services/event.service';
 })
 export class CreateEventDialogComponent {
   calendarApi: CalendarApi;
+  eventColors: { value: string; viewValue: string }[];
   eventTitle: FormControl<string>;
   startDate: FormControl<Date>;
   endDate: FormControl<Date>;
+  selectedColor: FormControl<string>;
 
   searchFriendInput: FormControl<string>;
   friends: FriendProfile[];
@@ -77,6 +81,17 @@ export class CreateEventDialogComponent {
   ) {
     this.calendarApi = data.calendarApi;
     this.eventTitle = new FormControl<string>('', { nonNullable: true });
+    this.eventColors = [
+      { value: '#3788d8', viewValue: 'Blue' },
+      { value: '#ff0000', viewValue: 'Red' },
+      { value: '#00ff00', viewValue: 'Green' },
+      { value: '#ffff00', viewValue: 'Yellow' },
+      { value: '#ff00ff', viewValue: 'Purple' },
+      { value: '#00ffff', viewValue: 'Cyan' },
+    ];
+    this.selectedColor = new FormControl<string>('#3788d8', {
+      nonNullable: true,
+    });
     this.startDate = new FormControl<Date>(data.dateSelectInfo.start, {
       nonNullable: true,
     });
@@ -110,6 +125,7 @@ export class CreateEventDialogComponent {
     this.event
       .create({
         eventTitle: this.eventTitle.value,
+        color: this.selectedColor.value,
         startDate: new Date(this.startDate.value),
         endDate: new Date(this.endDate.value),
         friendsSelected: this.selectedFriends,
@@ -124,6 +140,7 @@ export class CreateEventDialogComponent {
             title: this.eventTitle.value,
             start: this.startDate.value,
             end: this.endDate.value,
+            color: this.selectedColor.value,
           });
           this.calendarApi.unselect();
         },
