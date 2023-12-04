@@ -95,9 +95,12 @@
         <mat-icon>search</mat-icon>
       </button>
     </div>
-    @for (selected of selectedFriends; track selected) {
-    <div>{{ selected.first_name }} {{ selected.last_name }}</div>
-    }
+
+    <div class="selected-friends-list">
+      @for (selected of selectedFriends; track selected) {
+      <p>{{ selected.first_name }} {{ selected.last_name }}</p>
+      }
+    </div>
     <mat-selection-list #friendsSelected (selectionChange)="selected($event)">
       @for (friend of friends; track friend) {
       <mat-list-option class="friend-row" [value]="friend">

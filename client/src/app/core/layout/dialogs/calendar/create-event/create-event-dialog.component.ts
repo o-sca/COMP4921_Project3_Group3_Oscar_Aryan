@@ -84,10 +84,8 @@ export class CreateEventDialogComponent {
     this.eventColors = [
       { value: '#3788d8', viewValue: 'Blue' },
       { value: '#ff0000', viewValue: 'Red' },
-      { value: '#00ff00', viewValue: 'Green' },
-      { value: '#ffff00', viewValue: 'Yellow' },
-      { value: '#ff00ff', viewValue: 'Purple' },
-      { value: '#00ffff', viewValue: 'Cyan' },
+      { value: '#228B22', viewValue: 'Green' },
+      { value: '#4B0082', viewValue: 'Purple' },
     ];
     this.selectedColor = new FormControl<string>('#3788d8', {
       nonNullable: true,
