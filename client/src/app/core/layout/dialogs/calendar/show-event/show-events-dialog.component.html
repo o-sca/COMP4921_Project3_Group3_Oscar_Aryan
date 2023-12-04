@@ -1,18 +1,63 @@
+@if (eventInfo) {
 <div class="show-event">
-  <h2>
-    {{ eventInfo.title }}
-  </h2>
-  <div class="info">
-    <div>
-      <h4>Start Date</h4>
-      <p>{{ eventInfo.start_date_time }}</p>
-    </div>
-    <div>
-      <h4>End Date</h4>
-      <p>{{ eventInfo.end_date_time }}</p>
-    </div>
+  <div class="show-event-header">
+    <mat-icon style="color: {{ eventInfo.color }}; font-size: 15px"
+      >circle</mat-icon
+    >
+    <h2>
+      {{ eventInfo.title }}
+    </h2>
   </div>
+  <div class="info">
+    <p>{{ eventInfo.start_date_time }} - {{ eventInfo.end_date_time }}</p>
+  </div>
+  <h4>Attendees</h4>
+  @for (friend of eventInfo.Event_Attendance; track friend) {
+  <div class="friend">
+    <mat-icon>person</mat-icon>
+    <p>
+      {{ friend.user_attende!.first_name }} {{ friend.user_attende!.last_name }}
+    </p>
+    <span class="attendee-response">{{ friend.response_type }}</span>
+  </div>
+  } @if (!eventOwner && pendingInvitation) {
+  <div>
+    <h4>
+      {{ eventInfo.event_owner.first_name }} invited you to
+      {{ eventInfo.title }}!
+    </h4>
+    <button
+      mat-raised-button
+      mat-dialog-close
+      color="primary"
+      (click)="acceptEvent()"
+    >
+      Accept
+    </button>
+    <button
+      mat-raised-button
+      mat-dialog-close
+      color="warn"
+      (click)="declineEvent()"
+    >
+      Decline
+    </button>
+  </div>
+  }
   <mat-dialog-actions>
+    @if (eventOwner) {
+    <button
+      mat-raised-button
+      mat-dialog-close
+      color="warn"
+      (click)="deleteEvent()"
+    >
+      Delete
+    </button>
+    }
     <button mat-raised-button mat-dialog-close>Close</button>
   </mat-dialog-actions>
 </div>
+} @else {
+<mat-spinner [diameter]="50"></mat-spinner>
+}

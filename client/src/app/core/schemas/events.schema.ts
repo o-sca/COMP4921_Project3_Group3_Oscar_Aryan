@@ -15,6 +15,7 @@ interface EventAttendance {
 }
 
 export interface Event {
+  userId: number;
   id: number;
   created_at: string;
   updated_at: string;
@@ -24,5 +25,10 @@ export interface Event {
   color: string;
   deleted: boolean;
   event_owner_id: number;
+  event_owner: {
+    id: number;
+    first_name: string;
+    last_name: string;
+  };
   Event_Attendance: EventAttendance[];
 }

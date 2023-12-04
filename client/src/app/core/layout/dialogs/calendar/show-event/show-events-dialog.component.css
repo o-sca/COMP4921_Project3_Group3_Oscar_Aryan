@@ -5,6 +5,26 @@
   flex-direction: column;
 }
 
-.show-event h2 {
-  justify-self: center;
+.show-event-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.show-event-header > h2 {
+  margin: 0 0 10px;
+}
+
+.friend {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.attendee-response {
+  justify-self: end;
+}
+
+mat-dialog-actions {
+  justify-content: end;
 }
