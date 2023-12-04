@@ -55,6 +55,21 @@
         <mat-datepicker #startDatepicker> </mat-datepicker>
       </mat-form-field>
       <mat-form-field>
+        <mat-label>Start Time</mat-label>
+        <input
+          matInput
+          [ngxMatTimepicker]="startTimepicker"
+          [format]="24"
+          [formControl]="startTime"
+        />
+        <ngx-mat-timepicker-toggle
+          matSuffix
+          [for]="startTimepicker"
+        ></ngx-mat-timepicker-toggle>
+        <ngx-mat-timepicker #startTimepicker></ngx-mat-timepicker>
+        <mat-hint>23:59:00</mat-hint>
+      </mat-form-field>
+      <mat-form-field>
         <mat-label>End Date</mat-label>
         <input
           matInput
@@ -67,14 +82,22 @@
           matIconSuffix
           [for]="endDatepicker"
         ></mat-datepicker-toggle>
-        <mat-datepicker #endDatepicker>
-          <mat-datepicker-actions>
-            <button mat-button matDatepickerCancel>Cancel</button>
-            <button mat-raised-button color="primary" matDatepickerApply>
-              Apply
-            </button>
-          </mat-datepicker-actions>
-        </mat-datepicker>
+        <mat-datepicker #endDatepicker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>End Time</mat-label>
+        <input
+          matInput
+          [ngxMatTimepicker]="endTimepicker"
+          [format]="24"
+          [formControl]="endTime"
+        />
+        <ngx-mat-timepicker-toggle
+          matSuffix
+          [for]="endTimepicker"
+        ></ngx-mat-timepicker-toggle>
+        <ngx-mat-timepicker #endTimepicker></ngx-mat-timepicker>
+        <mat-hint>23:59:00</mat-hint>
       </mat-form-field>
     </div>
   </div>

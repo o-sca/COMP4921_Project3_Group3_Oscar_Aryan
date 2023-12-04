@@ -35,10 +35,10 @@
     "@fullcalendar/interaction": "^6.1.10",
     "@fullcalendar/list": "^6.1.10",
     "@fullcalendar/timegrid": "^6.1.10",
-    "@igniteui/material-icons-extended": "^3.0.0",
     "fflate": "^0.7.3",
     "hammerjs": "^2.0.8",
     "ngx-cookie-service": "^17.0.0",
+    "ngx-mat-timepicker": "^17.0.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
