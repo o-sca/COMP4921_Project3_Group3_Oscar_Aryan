@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {
@@ -30,6 +31,7 @@ import { SpinnerService } from '../core/services/spinner.service';
     MatButtonModule,
     MatProgressSpinnerModule,
     MatInputModule,
+    MatIconModule,
     FormsModule,
     RouterOutlet,
     RouterLink,
@@ -43,6 +45,7 @@ export class SignInComponent {
   errorMessage: string;
   email: FormControl;
   password: FormControl;
+  hide: boolean;
 
   constructor(
     private auth: AuthService,
@@ -53,6 +56,7 @@ export class SignInComponent {
     this.errorMessage = '';
     this.email = new FormControl(null, [Validators.required, Validators.email]);
     this.password = new FormControl(null, [Validators.required]);
+    this.hide = true;
   }
 
   getErrorMessage(): string {
