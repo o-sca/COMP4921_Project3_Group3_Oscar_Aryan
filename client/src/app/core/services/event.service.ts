@@ -43,6 +43,19 @@ export class EventService {
       );
   }
 
+  getDeletedEvents() {
+    return this.http
+      .get(this._baseUrl + '/event/deleted', { observe: 'response' })
+      .pipe(
+        map((response) => {
+          return response.body as Event[];
+        }),
+        catchError((err) => {
+          return throwError(() => err);
+        }),
+      );
+  }
+
   create({
     eventTitle,
     color,
@@ -71,6 +84,90 @@ export class EventService {
       .pipe(
         map((response) => {
           return response.body as { id: number };
+        }),
+        catchError((err) => {
+          return throwError(() => err);
+        }),
+      );
+  }
+
+  delete(eventId: number) {
+    return this.http
+      .delete(this._baseUrl + '/event?id=' + eventId, { observe: 'response' })
+      .pipe(
+        map((response) => {
+          if (response.ok) {
+            return true;
+          }
+          return false;
+        }),
+        catchError((err) => {
+          return throwError(() => err);
+        }),
+      );
+  }
+
+  accept(eventId: number) {
+    return this.http
+      .patch(
+        this._baseUrl + '/event/' + eventId,
+        { invitationStatus: 'ACCEPTED' },
+        {
+          headers: JSON_HEADERS,
+          observe: 'response',
+        },
+      )
+      .pipe(
+        map((response) => {
+          if (response.ok) {
+            return true;
+          }
+          return false;
+        }),
+        catchError((err) => {
+          return throwError(() => err);
+        }),
+      );
+  }
+
+  decline(eventId: number) {
+    return this.http
+      .patch(
+        this._baseUrl + '/event/' + eventId,
+        { invitationStatus: 'DECLINED' },
+        {
+          headers: JSON_HEADERS,
+          observe: 'response',
+        },
+      )
+      .pipe(
+        map((response) => {
+          if (response.ok) {
+            return true;
+          }
+          return false;
+        }),
+        catchError((err) => {
+          return throwError(() => err);
+        }),
+      );
+  }
+
+  restore(eventId: number) {
+    return this.http
+      .patch(
+        this._baseUrl + '/event?id=' + eventId,
+        { deleted: false },
+        {
+          observe: 'response',
+        },
+      )
+      .pipe(
+        map((response) => {
+          if (response.ok) {
+            return true;
+          }
+          return false;
         }),
         catchError((err) => {
           return throwError(() => err);

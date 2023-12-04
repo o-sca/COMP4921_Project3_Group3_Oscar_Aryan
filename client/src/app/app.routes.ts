@@ -6,6 +6,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { AuthedGuard } from './core/guards/authed.guard';
+import { EventsComponent } from './events/events.component';
 
 export const routes: Routes = [
   {
@@ -14,7 +15,16 @@ export const routes: Routes = [
     pathMatch: 'full',
     canActivate: [AuthGuard],
   },
-  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'events',
+    component: EventsComponent,
+    canActivate: [AuthGuard],
+  },
   {
     path: 'signin',
     component: SignInComponent,

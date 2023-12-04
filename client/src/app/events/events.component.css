@@ -1,0 +1,13 @@
+h2 {
+  text-align: center;
+}
+
+.events-table {
+  height: 300px;
+  overflow: auto;
+}
+
+.deleted-table {
+  height: 300px;
+  overflow: auto;
+}

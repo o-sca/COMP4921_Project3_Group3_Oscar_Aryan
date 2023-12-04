@@ -85,6 +85,7 @@ export class LandingComponent implements OnInit {
     this.dialog.open(ShowEventDialogComponent, {
       data: {
         id: clickInfo.event.id,
+        calendarApi: clickInfo.view.calendar,
       },
     });
   }
