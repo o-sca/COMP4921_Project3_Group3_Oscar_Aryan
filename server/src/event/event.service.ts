@@ -36,11 +36,6 @@ export class EventService {
             {
               event_owner_id: userId,
               deleted: false,
-              Event_Attendance: {
-                some: {
-                  response_type: { not: EVENT_INVITATION_STATUS.DECLINED },
-                },
-              },
             },
             {
               deleted: false,
