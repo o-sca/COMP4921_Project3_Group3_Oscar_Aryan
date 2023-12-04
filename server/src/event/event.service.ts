@@ -1,10 +1,32 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateEventDto } from './dto/create-event.dto';
+import { PrismaErrorHandler } from 'src/common';
+import { ConfigService } from '@nestjs/config';
+import { EVENT_INVITATION_STATUS } from '@prisma/client';
+import { Event } from '@prisma/client';
+import { GET_DELETED_EVENTS } from './event.raw-query';
 
 @Injectable()
 export class EventService {
-  constructor(private prisma: PrismaService) {}
+  errorHandler: PrismaErrorHandler;
+
+  constructor(private prisma: PrismaService, private config: ConfigService) {
+    const isProduction = this.config.get('NODE_ENV') === 'production';
+    this.errorHandler = new PrismaErrorHandler(isProduction);
+  }
+
+  async getAllDeleted(userId: number) {
+    try {
+      const events = await this.prisma.$queryRaw<
+        Event & { days_left: number }[]
+      >(GET_DELETED_EVENTS(userId));
+      return events;
+    } catch (err) {
+      console.log(err);
+      return this.errorHandler.handle(err);
+    }
+  }
 
   async getAll(userId: number) {
     try {
@@ -13,11 +35,19 @@ export class EventService {
           OR: [
             {
               event_owner_id: userId,
+              deleted: false,
+              Event_Attendance: {
+                some: {
+                  response_type: { not: EVENT_INVITATION_STATUS.DECLINED },
+                },
+              },
             },
             {
+              deleted: false,
               Event_Attendance: {
                 some: {
                   user_attende_id: userId,
+                  response_type: { not: EVENT_INVITATION_STATUS.DECLINED },
                 },
               },
             },
@@ -30,11 +60,11 @@ export class EventService {
       return events;
     } catch (err) {
       console.log(err);
-      throw new InternalServerErrorException();
+      return this.errorHandler.handle(err);
     }
   }
 
-  async getOne(eventId: number) {
+  async getOne(userId: number, eventId: number) {
     try {
       const event = await this.prisma.event.findFirst({
         where: {
@@ -52,15 +82,58 @@ export class EventService {
               },
             },
           },
+          event_owner: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+            },
+          },
         },
       });
       if (event.deleted) {
         return;
       }
-      return event;
+      return { userId, ...event };
     } catch (err) {
       console.log(err);
-      throw new InternalServerErrorException();
+      return this.errorHandler.handle(err);
+    }
+  }
+
+  async delete(userId: number, eventId: number) {
+    try {
+      await this.prisma.event.update({
+        where: {
+          id: eventId,
+          event_owner_id: userId,
+        },
+        data: {
+          deleted: true,
+        },
+      });
+      return;
+    } catch (err) {
+      console.log(err);
+      return this.errorHandler.handle(err);
+    }
+  }
+
+  async restore(userId: number, eventId: number, deleted: boolean) {
+    try {
+      await this.prisma.event.update({
+        where: {
+          id: eventId,
+          event_owner_id: userId,
+        },
+        data: {
+          deleted: deleted,
+        },
+      });
+      return;
+    } catch (err) {
+      console.log(err);
+      return this.errorHandler.handle(err);
     }
   }
 
@@ -69,6 +142,7 @@ export class EventService {
       const result = await this.prisma.event.create({
         data: {
           event_owner_id: userId,
+          color: dto.color,
           title: dto.eventTitle,
           start_date_time: dto.startDate,
           end_date_time: dto.endDate,
@@ -77,7 +151,7 @@ export class EventService {
               data: dto.friends.map((friend) => {
                 return {
                   user_attende_id: friend.id,
-                  response_type: 'PENDING',
+                  response_type: EVENT_INVITATION_STATUS.PENDING,
                 };
               }),
             },
@@ -87,7 +161,39 @@ export class EventService {
       return result;
     } catch (err) {
       console.log(err);
-      throw new InternalServerErrorException();
+      return this.errorHandler.handle(err);
+    }
+  }
+
+  async updateAttendeeStatus(
+    userId: number,
+    eventId: number,
+    invitationStatus: EVENT_INVITATION_STATUS,
+  ) {
+    try {
+      const result = await this.prisma.event.update({
+        where: {
+          id: eventId,
+          event_owner_id: { not: userId },
+        },
+        data: {
+          Event_Attendance: {
+            updateMany: {
+              data: {
+                response_type: invitationStatus,
+              },
+              where: {
+                event_id: eventId,
+                user_attende_id: userId,
+              },
+            },
+          },
+        },
+      });
+      return result;
+    } catch (err) {
+      console.log(err);
+      return this.errorHandler.handle(err);
     }
   }
 }
