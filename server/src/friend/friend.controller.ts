@@ -19,8 +19,8 @@ export class FriendController {
 
   @HttpCode(HttpStatus.OK)
   @Get('find')
-  find(@Query('name') name: string) {
-    return this.friend.find(name);
+  find(@ReqUser('id') userId: number, @Query('name') name: string) {
+    return this.friend.find(name, userId);
   }
 
   @HttpCode(HttpStatus.OK)

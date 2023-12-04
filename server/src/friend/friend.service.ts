@@ -43,13 +43,31 @@ export class FriendService {
     }
   }
 
-  async find(name: string) {
+  async find(name: string, userId: number) {
     try {
       const results = await this.prisma.user.findMany({
         where: {
           OR: [
-            { first_name: { contains: name } },
-            { last_name: { contains: name } },
+            {
+              first_name: { contains: name },
+              id: { not: userId },
+              friends_received: {
+                none: { OR: [{ receiver_id: userId }, { sender_id: userId }] },
+              },
+              friend_sent: {
+                none: { OR: [{ receiver_id: userId }, { sender_id: userId }] },
+              },
+            },
+            {
+              last_name: { contains: name },
+              id: { not: userId },
+              friends_received: {
+                none: { OR: [{ receiver_id: userId }, { sender_id: userId }] },
+              },
+              friend_sent: {
+                none: { OR: [{ receiver_id: userId }, { sender_id: userId }] },
+              },
+            },
           ],
         },
         select: {
