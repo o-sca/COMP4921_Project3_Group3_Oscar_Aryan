@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { FRIEND_INVITATION_STATUS, PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -6,12 +6,12 @@ async function main() {
   await prisma.user.deleteMany({});
 
   await prisma.user.upsert({
-    where: { email: 'dummy@mail.com' },
+    where: { email: 'patrick@mail.com' },
     update: {},
     create: {
-      email: 'dummy@mail.com',
-      first_name: 'Dummy',
-      last_name: 'User',
+      email: 'patrick@mail.com',
+      first_name: 'Patrick',
+      last_name: 'Guichon',
       password: '$2a$12$KfR9eNC9fxFBviwsjWffaOeuGNw3QJL6ubqg9KfP9gJw/JMMAMf8O',
       profile_pic_url:
         'https://res.cloudinary.com/dj6rvkhvo/image/upload/v1697499455/avatars/1/h1hhribuj7xiffrndplr.jpg',
@@ -48,7 +48,7 @@ async function main() {
   await prisma.user.createMany({
     data: [
       {
-        email: 'dummy2@mail.com',
+        email: 'carmen@mail.com',
         first_name: 'Carmen',
         last_name: 'Berzatto',
         password:
@@ -57,7 +57,7 @@ async function main() {
           'https://res.cloudinary.com/dj6rvkhvo/image/upload/v1697499455/avatars/1/h1hhribuj7xiffrndplr.jpg',
       },
       {
-        email: 'dummy3@mail.com',
+        email: 'mikey@mail.com',
         first_name: 'Mikey',
         last_name: 'Berzatto',
         password:
@@ -66,7 +66,7 @@ async function main() {
           'https://res.cloudinary.com/dj6rvkhvo/image/upload/v1697499455/avatars/1/h1hhribuj7xiffrndplr.jpg',
       },
       {
-        email: 'dummy4@mail.com',
+        email: 'richard@mail.com',
         first_name: 'Richard',
         last_name: 'Jerimovic',
         password:
@@ -75,7 +75,7 @@ async function main() {
           'https://res.cloudinary.com/dj6rvkhvo/image/upload/v1697499455/avatars/1/h1hhribuj7xiffrndplr.jpg',
       },
       {
-        email: 'dummy5@mail.com',
+        email: 'ayo@mail.com',
         first_name: 'Ayo',
         last_name: 'Edebiri',
         password:
@@ -84,13 +84,155 @@ async function main() {
           'https://res.cloudinary.com/dj6rvkhvo/image/upload/v1697499455/avatars/1/h1hhribuj7xiffrndplr.jpg',
       },
       {
-        email: 'dummy6@mail.com',
+        email: 'jim@mail.com',
         first_name: 'Jim',
         last_name: 'Halpert',
         password:
           '$2a$12$.Bgf65iUQLngvowMdhMC.eURFSJhPCBcjXkfHb79OBTqzF/lAtvvS',
         profile_pic_url:
           'https://res.cloudinary.com/dj6rvkhvo/image/upload/v1697499455/avatars/1/h1hhribuj7xiffrndplr.jpg',
+      },
+      {
+        email: 'dwight@mail.com',
+        first_name: 'Dwight',
+        last_name: 'Shrute',
+        password:
+          '$2a$12$.Bgf65iUQLngvowMdhMC.eURFSJhPCBcjXkfHb79OBTqzF/lAtvvS',
+        profile_pic_url:
+          'https://res.cloudinary.com/dj6rvkhvo/image/upload/v1697499455/avatars/1/h1hhribuj7xiffrndplr.jpg',
+      },
+      {
+        email: 'andy@mail.com',
+        first_name: 'Andy',
+        last_name: 'Bernard',
+        password:
+          '$2a$12$.Bgf65iUQLngvowMdhMC.eURFSJhPCBcjXkfHb79OBTqzF/lAtvvS',
+        profile_pic_url:
+          'https://res.cloudinary.com/dj6rvkhvo/image/upload/v1697499455/avatars/1/h1hhribuj7xiffrndplr.jpg',
+      },
+      {
+        email: 'neil@mail.com',
+        first_name: 'Neil',
+        last_name: 'Faks',
+        password:
+          '$2a$12$.Bgf65iUQLngvowMdhMC.eURFSJhPCBcjXkfHb79OBTqzF/lAtvvS',
+        profile_pic_url:
+          'https://res.cloudinary.com/dj6rvkhvo/image/upload/v1697499455/avatars/1/h1hhribuj7xiffrndplr.jpg',
+      },
+    ],
+  });
+
+  await prisma.friend.createMany({
+    data: [
+      {
+        receiver_id: 1,
+        sender_id: 2,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 1,
+        sender_id: 3,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 1,
+        sender_id: 4,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 1,
+        sender_id: 5,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 1,
+        sender_id: 6,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 1,
+        sender_id: 7,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 2,
+        sender_id: 3,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 2,
+        sender_id: 4,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 2,
+        sender_id: 5,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 2,
+        sender_id: 6,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 2,
+        sender_id: 11,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 2,
+        sender_id: 7,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 3,
+        sender_id: 4,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 3,
+        sender_id: 5,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 3,
+        sender_id: 6,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 3,
+        sender_id: 11,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 3,
+        sender_id: 7,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 8,
+        sender_id: 9,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 8,
+        sender_id: 10,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 8,
+        sender_id: 11,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 8,
+        sender_id: 6,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
+      },
+      {
+        receiver_id: 8,
+        sender_id: 7,
+        invitation_status: FRIEND_INVITATION_STATUS.ACCEPTED,
       },
     ],
   });
