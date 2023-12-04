@@ -87,11 +87,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
       'last_name',
       'action',
     ];
-    this.requestPaginator = new MatPaginator(
-      new MatPaginatorIntl(),
-      this.changeDetector,
-    );
-
     this.friendsDataSource = new MatTableDataSource<Friend>([]);
     this.friendsDisplayColumns = [
       'profile_pic',
@@ -106,6 +101,11 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
       nonNullable: true,
     });
 
+    this.requestPaginator = new MatPaginator(
+      new MatPaginatorIntl(),
+      this.changeDetector,
+    );
+
     this.friendsPaginator = new MatPaginator(
       new MatPaginatorIntl(),
       this.changeDetector,
@@ -114,6 +114,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.requestDataSource.paginator = this.requestPaginator;
+    this.friendsDataSource.paginator = this.friendsPaginator;
   }
 
   ngOnInit(): void {

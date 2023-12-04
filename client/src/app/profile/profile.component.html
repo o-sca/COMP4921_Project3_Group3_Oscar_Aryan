@@ -109,7 +109,10 @@
   </table>
 
   <mat-paginator
-    name="requestPaginator"
+    #friendPaginator
+    name="friendPaginator"
+    [length]="friendsDataSource.data.length"
+    [pageSize]="5"
     [pageSizeOptions]="[5]"
     showFirstLastButtons
   ></mat-paginator>
@@ -162,7 +165,9 @@
   </table>
 
   <mat-paginator
-    name="friendPaginator"
+    name="requestPaginator"
+    [length]="requestDataSource.data.length"
+    [pageSize]="5"
     [pageSizeOptions]="[5]"
     showFirstLastButtons
   ></mat-paginator>
