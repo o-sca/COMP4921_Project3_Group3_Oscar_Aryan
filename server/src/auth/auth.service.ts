@@ -1,8 +1,4 @@
-import {
-  HttpStatus,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -32,18 +28,12 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new ValidationException(
-        'Invalid credentials',
-        HttpStatus.UNAUTHORIZED,
-      );
+      throw new ValidationException('Invalid credentials');
     }
 
     const isValid = bcrypt.compareSync(dto.password, user.password);
     if (!isValid) {
-      throw new ValidationException(
-        'Invalid credentials',
-        HttpStatus.UNAUTHORIZED,
-      );
+      throw new ValidationException('Invalid credentials');
     }
 
     const token = await this.jwt.signAsync({
