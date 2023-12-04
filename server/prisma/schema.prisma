@@ -94,5 +94,5 @@ model ExpiredJwt {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   
-  token      String   @db.VarChar(510) @unique
+  token      String   @db.Text
 }

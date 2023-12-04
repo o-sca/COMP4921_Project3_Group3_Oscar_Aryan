@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const expiredToken = await this.prisma.expiredJwt.findUnique({
+      const expiredToken = await this.prisma.expiredJwt.findFirst({
         where: {
           token: token,
         },
@@ -58,7 +58,7 @@ export class AuthGuard implements CanActivate {
   }
 
   private extractJwtToken(req: Request) {
-    const token = req.cookies[this.config.get('JWT_TOKEN_NAME', 'aryan.sid')];
+    const token = req.cookies[this.config.get('TOKEN_NAME', 'aryan.sid')];
     return token;
   }
 }
