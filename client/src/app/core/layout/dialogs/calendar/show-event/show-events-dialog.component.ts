@@ -51,8 +51,8 @@ export class ShowEventDialogComponent implements OnInit {
     this.event.getEvent(this.id).subscribe({
       next: (event) => {
         if (event.userId === event.event_owner_id) this.eventOwner = true;
-        event.start_date_time = new Date(event.start_date_time).toDateString();
-        event.end_date_time = new Date(event.end_date_time).toDateString();
+        event.start_date_time = this.convertDate(event.start_date_time);
+        event.end_date_time = this.convertDate(event.end_date_time);
         event.Event_Attendance.forEach((attendee) => {
           if (
             attendee.user_attende_id === event.userId &&
@@ -91,5 +91,11 @@ export class ShowEventDialogComponent implements OnInit {
         }
       },
     });
+  }
+
+  private convertDate(date: string) {
+    const dateString = new Date(date).toDateString();
+    const timeString = new Date(date).toLocaleTimeString();
+    return dateString + ' ' + timeString;
   }
 }
