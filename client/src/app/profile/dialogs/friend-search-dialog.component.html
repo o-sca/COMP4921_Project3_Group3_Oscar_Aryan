@@ -1,6 +1,6 @@
 @if(users.length > 0) {
-<div class="mat-elevation-z8">
-  <h5>Search Result</h5>
+<div style="width: 400px; max-height: 200px; padding: 10px; overflow: auto">
+  <h4 style="text-align: center; font-weight: bold">Search Result</h4>
   <mat-list>
     @for (user of users; track user) {
     <mat-list-item class="suggestion-list-item">

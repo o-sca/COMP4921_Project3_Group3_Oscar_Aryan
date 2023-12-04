@@ -1,174 +1,184 @@
-<mat-card class="profile-card">
-  <mat-card-header>
-    <div
-      mat-card-avatar
-      style="background-image: url({{ profilePicUrl }}); background-size: cover"
-    ></div>
-    <mat-card-title>Welcome back, {{ firstName }}</mat-card-title>
-    <mat-card-subtitle>{{ email }}</mat-card-subtitle>
-    <button mat-mini-fab (click)="openDialog()">
-      <mat-icon>edit</mat-icon>
-    </button>
-  </mat-card-header>
-</mat-card>
-<div class="search-friend-bar">
-  <button
-    mat-stroked-button
-    (click)="toggleSearchInput()"
-    *ngIf="!isSearchInputVisible"
-  >
-    <mat-icon>search</mat-icon><span>Find Friends</span>
-  </button>
-  <div *ngIf="isSearchInputVisible" class="search-input">
-    <mat-form-field>
-      <input
-        matInput
-        placeholder="Search for friends"
-        [formControl]="searchInput"
-        required
-      />
-    </mat-form-field>
-    <mat-icon (click)="findFriend()">search</mat-icon>
-    <mat-icon (click)="toggleSearchInput()">close</mat-icon>
-  </div>
-</div>
-<div class="mat-elevation-z8" *ngIf="suggestions.length > 0">
-  <h5>People you might know 👀</h5>
-  <mat-list>
-    @for (suggestion of suggestions; track suggestion) {
-    <mat-list-item class="suggestion-list-item">
-      <img matListItemAvatar src="{{ suggestion.profile_pic_url }}" />
-      <span matListItemTitle>{{ suggestion.name }}</span>
-      <span matListItemLine>
-        {{ suggestion.email }}
-      </span>
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="sendFriendRequest(suggestion)"
-      >
-        Add
+<div style="padding: 10px">
+  <mat-card class="profile-card">
+    <mat-card-header>
+      <div
+        mat-card-avatar
+        style="background-image: url({{
+          profilePicUrl
+        }}); background-size: cover"
+      ></div>
+      <mat-card-title>Welcome back, {{ firstName }}</mat-card-title>
+      <mat-card-subtitle>{{ email }}</mat-card-subtitle>
+      <button mat-mini-fab (click)="openDialog()">
+        <mat-icon>edit</mat-icon>
       </button>
-    </mat-list-item>
-    }
-  </mat-list>
-</div>
-<div class="mat-elevation-z8">
-  <h5>Friends</h5>
-  <table mat-table [dataSource]="friendsDataSource">
-    <ng-container matColumnDef="profile_pic">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let friend">
-        <img
-          mat-card-avatar
-          style="background-image: url({{
-            friend.profile_pic_url
-          }}); background-size: cover"
+    </mat-card-header>
+  </mat-card>
+  <div class="search-friend-bar">
+    <button
+      mat-stroked-button
+      (click)="toggleSearchInput()"
+      *ngIf="!isSearchInputVisible"
+    >
+      <mat-icon>search</mat-icon><span>Find Friends</span>
+    </button>
+    <div *ngIf="isSearchInputVisible" class="search-input">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Search for friends"
+          [formControl]="searchInput"
+          required
         />
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="first_name">
-      <th mat-header-cell *matHeaderCellDef>First Name</th>
-      <td mat-cell *matCellDef="let friend">
-        {{ friend.first_name }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="last_name">
-      <th mat-header-cell *matHeaderCellDef>Last Name</th>
-      <td mat-cell *matCellDef="let friend">{{ friend.last_name }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="status" class="action-row">
-      <th mat-header-cell *matHeaderCellDef>Status</th>
-      <td mat-cell *matCellDef="let friend" class="action-row">
-        <span *ngIf="friend.invitation_status === 'ACCEPTED'; else pending">
-          <button
-            mat-raised-button
-            color="warn"
-            (click)="declineFriend(friend)"
-          >
-            Remove
-          </button>
+      </mat-form-field>
+      <mat-icon (click)="findFriend()">search</mat-icon>
+      <mat-icon (click)="toggleSearchInput()">close</mat-icon>
+    </div>
+  </div>
+  <div class="mat-elevation-z2" *ngIf="suggestions.length > 0">
+    <h4>People you might know 👀</h4>
+    <mat-list>
+      @for (suggestion of suggestions; track suggestion) {
+      <mat-list-item class="suggestion-list-item">
+        <img matListItemAvatar src="{{ suggestion.profile_pic_url }}" />
+        <span matListItemTitle>{{ suggestion.name }}</span>
+        <span matListItemLine>
+          {{ suggestion.email }}
         </span>
-        <ng-template #pending>
-          <button
-            mat-raised-button
-            color="accent"
-            (click)="removeRequest(friend)"
-          >
-            Cancel
-          </button>
-        </ng-template>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="friendsDisplayColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: friendsDisplayColumns"></tr>
-  </table>
-
-  <mat-paginator
-    #friendPaginator
-    name="friendPaginator"
-    [length]="friendsDataSource.data.length"
-    [pageSize]="5"
-    [pageSizeOptions]="[5]"
-    showFirstLastButtons
-  ></mat-paginator>
-</div>
-<div class="mat-elevation-z8">
-  <h5>Friend Requests</h5>
-  <table mat-table [dataSource]="requestDataSource">
-    <ng-container matColumnDef="profile_pic">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let friend">
-        <img
-          mat-card-avatar
-          style="background-image: url({{
-            friend.profile_pic_url
-          }}); background-size: cover"
-        />
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="first_name">
-      <th mat-header-cell *matHeaderCellDef>First Name</th>
-      <td mat-cell *matCellDef="let friend">
-        {{ friend.first_name }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="last_name">
-      <th mat-header-cell *matHeaderCellDef>Last Name</th>
-      <td mat-cell *matCellDef="let friend">{{ friend.last_name }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="action">
-      <th mat-header-cell *matHeaderCellDef>Action</th>
-      <td mat-cell *matCellDef="let friend" class="action-row">
         <button
           mat-raised-button
           color="primary"
-          (click)="acceptFriend(friend)"
+          (click)="sendFriendRequest(suggestion)"
         >
-          Accept
+          Add
         </button>
-        <button mat-raised-button color="warn" (click)="declineFriend(friend)">
-          Decline
-        </button>
-      </td>
-    </ng-container>
+      </mat-list-item>
+      }
+    </mat-list>
+  </div>
+  <div class="friend-table">
+    <div class="mat-elevation-z2">
+      <h4>Friends</h4>
+      <table mat-table [dataSource]="friendsDataSource">
+        <ng-container matColumnDef="profile_pic">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let friend">
+            <img
+              mat-card-avatar
+              style="background-image: url({{
+                friend.profile_pic_url
+              }}); background-size: cover"
+            />
+          </td>
+        </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="requestDisplayColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: requestDisplayColumns"></tr>
-  </table>
+        <ng-container matColumnDef="first_name">
+          <th mat-header-cell *matHeaderCellDef>First Name</th>
+          <td mat-cell *matCellDef="let friend">
+            {{ friend.first_name }}
+          </td>
+        </ng-container>
 
-  <mat-paginator
-    name="requestPaginator"
-    [length]="requestDataSource.data.length"
-    [pageSize]="5"
-    [pageSizeOptions]="[5]"
-    showFirstLastButtons
-  ></mat-paginator>
+        <ng-container matColumnDef="last_name">
+          <th mat-header-cell *matHeaderCellDef>Last Name</th>
+          <td mat-cell *matCellDef="let friend">{{ friend.last_name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status" class="action-row">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let friend" class="action-row">
+            <span *ngIf="friend.invitation_status === 'ACCEPTED'; else pending">
+              <button
+                mat-raised-button
+                color="warn"
+                (click)="declineFriend(friend)"
+              >
+                Remove
+              </button>
+            </span>
+            <ng-template #pending>
+              <button
+                mat-raised-button
+                color="accent"
+                (click)="removeRequest(friend)"
+              >
+                Cancel
+              </button>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="friendsDisplayColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: friendsDisplayColumns"></tr>
+      </table>
+
+      <mat-paginator
+        #friendPaginator
+        name="friendPaginator"
+        [length]="friendsDataSource.data.length"
+        [pageSize]="5"
+        [pageSizeOptions]="[5]"
+        showFirstLastButtons
+      ></mat-paginator>
+    </div>
+    <div class="mat-elevation-z2">
+      <h4>Friend Requests</h4>
+      <table mat-table [dataSource]="requestDataSource">
+        <ng-container matColumnDef="profile_pic">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let friend">
+            <img
+              mat-card-avatar
+              style="background-image: url({{
+                friend.profile_pic_url
+              }}); background-size: cover"
+            />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="first_name">
+          <th mat-header-cell *matHeaderCellDef>First Name</th>
+          <td mat-cell *matCellDef="let friend">
+            {{ friend.first_name }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="last_name">
+          <th mat-header-cell *matHeaderCellDef>Last Name</th>
+          <td mat-cell *matCellDef="let friend">{{ friend.last_name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef>Action</th>
+          <td mat-cell *matCellDef="let friend" class="action-row">
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="acceptFriend(friend)"
+            >
+              Accept
+            </button>
+            <button
+              mat-raised-button
+              color="warn"
+              (click)="declineFriend(friend)"
+            >
+              Decline
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="requestDisplayColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: requestDisplayColumns"></tr>
+      </table>
+
+      <mat-paginator
+        name="requestPaginator"
+        [length]="requestDataSource.data.length"
+        [pageSize]="5"
+        [pageSizeOptions]="[5]"
+        showFirstLastButtons
+      ></mat-paginator>
+    </div>
+  </div>
 </div>
