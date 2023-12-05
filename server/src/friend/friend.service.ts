@@ -142,6 +142,17 @@ export class FriendService {
 
   async addOne(userId: number, receiverId: number) {
     try {
+      const requestExists = await this.prisma.friend.findFirst({
+        where: {
+          OR: [
+            { sender_id: userId, receiver_id: receiverId },
+            { sender_id: receiverId, receiver_id: userId },
+          ],
+        },
+      });
+      if (requestExists) {
+        return;
+      }
       await this.prisma.friend.create({
         data: {
           sender_id: userId,
