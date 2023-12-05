@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, throwError } from 'rxjs';
 import { UtilityService } from './utility.service';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
@@ -10,6 +11,7 @@ export class ProfileService {
   constructor(
     private http: HttpClient,
     private utility: UtilityService,
+    private router: Router,
   ) {
     this._baseUrl = this.utility.getApiUrl();
   }
@@ -34,5 +36,9 @@ export class ProfileService {
           return throwError(() => err);
         }),
       );
+  }
+
+  goToProfile(profileId: number) {
+    return this.router.navigate(['profile', profileId]);
   }
 }

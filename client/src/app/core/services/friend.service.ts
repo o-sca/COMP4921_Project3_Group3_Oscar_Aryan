@@ -6,6 +6,7 @@ import {
   Friend,
   FriendProfile,
   FriendSuggestion,
+  UserProfileFriend,
 } from '../schemas/friends.schema';
 import { JSON_HEADERS } from './http-header';
 
@@ -212,6 +213,22 @@ export class FriendService {
       .pipe(
         map((response) => {
           return response.body as FriendProfile[];
+        }),
+        catchError((err) => {
+          return throwError(() => err);
+        }),
+      );
+  }
+
+  getUserFriends(profileId: number) {
+    return this.http
+      .get(this._baseUrl + `/friends/profile?id=${profileId}`, {
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          const body = response.body as UserProfileFriend[];
+          return body;
         }),
         catchError((err) => {
           return throwError(() => err);

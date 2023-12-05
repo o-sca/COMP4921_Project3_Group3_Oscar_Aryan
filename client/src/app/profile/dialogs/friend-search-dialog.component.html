@@ -4,7 +4,13 @@
   <mat-list>
     @for (user of users; track user) {
     <mat-list-item class="suggestion-list-item">
-      <img matListItemAvatar src="{{ user.profile_pic_url }}" />
+      <img
+        style="cursor: pointer"
+        matListItemAvatar
+        src="{{ user.profile_pic_url }}"
+        (click)="this.profile.goToProfile(user.id)"
+        mat-dialog-close
+      />
       <span matListItemTitle>{{ user.first_name }} {{ user.last_name }}</span>
       <span matListItemLine>
         {{ user.email }}

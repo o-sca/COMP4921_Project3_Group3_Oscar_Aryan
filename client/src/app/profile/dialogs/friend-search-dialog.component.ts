@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FriendService } from '../../core/services/friend.service';
 import { FriendProfile } from '../../core/schemas/friends.schema';
 import { MatListModule } from '@angular/material/list';
+import { ProfileService } from '../../core/services/profile.service';
 
 @Component({
   templateUrl: './friend-search-dialog.component.html',
@@ -27,6 +28,7 @@ export class FriendSearchDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: FriendProfile[],
     private friend: FriendService,
+    public profile: ProfileService,
   ) {
     this.users = data;
   }

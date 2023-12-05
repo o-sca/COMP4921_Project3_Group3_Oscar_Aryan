@@ -23,3 +23,7 @@ export interface FriendSuggestion {
   email: string;
   profile_pic_url: string;
 }
+
+export interface UserProfileFriend extends Omit<FriendProfile, 'id'> {
+  friend_id: number;
+}

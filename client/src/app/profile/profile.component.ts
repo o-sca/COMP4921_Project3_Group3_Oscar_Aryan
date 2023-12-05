@@ -30,6 +30,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { FriendSearchDialogComponent } from './dialogs/friend-search-dialog.component';
+import { ProfileService } from '../core/services/profile.service';
 
 @Component({
   selector: 'app-profile',
@@ -74,6 +75,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
     private route: ActivatedRoute,
     private changeDetector: ChangeDetectorRef,
     public dialog: MatDialog,
+    public profile: ProfileService,
     private snackBar: MatSnackBar,
   ) {
     this.firstName = '';
@@ -96,7 +98,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
     ];
 
     this.suggestions = [];
-    this.isSearchInputVisible = false;
+    this.isSearchInputVisible = true;
     this.searchInput = new FormControl<string>('', {
       nonNullable: true,
     });

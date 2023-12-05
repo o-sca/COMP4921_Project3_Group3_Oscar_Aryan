@@ -4,23 +4,16 @@ h4 {
   font-weight: bold;
 }
 
+img {
+  cursor: pointer;
+}
+
 .search-friend-bar {
   padding: 10px;
   text-align: center;
   item-align: center;
   cursor: pointer;
-}
-
-.search-input {
-  display: flex;
-  flex-direction: row;
-}
-
-.search-input input {
-  flex: 2 100%;
-}
-.search-input mat-icon {
-  flex: 1;
+  width: 100%;
 }
 
 .friend-table {
