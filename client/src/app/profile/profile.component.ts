@@ -98,7 +98,7 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
     ];
 
     this.suggestions = [];
-    this.isSearchInputVisible = true;
+    this.isSearchInputVisible = false;
     this.searchInput = new FormControl<string>('', {
       nonNullable: true,
     });
