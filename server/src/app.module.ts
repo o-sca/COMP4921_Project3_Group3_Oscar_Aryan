@@ -5,11 +5,11 @@ import { cwd } from 'process';
 import { AuthModule } from './auth/auth.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { AuthGuard, NotFoundExceptionFilter } from './common';
+import { EventModule } from './event/event.module';
+import { FriendModule } from './friend/friend.module';
 import { HealthModule } from './health/health.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { StorageModule } from './storage/storage.module';
-import { FriendModule } from './friend/friend.module';
-import { EventModule } from './event/event.module';
 
 @Module({
   imports: [

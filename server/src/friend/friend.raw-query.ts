@@ -79,6 +79,47 @@ export const GET_ALL_FRIENDS = (userId: number) => {
       `;
 };
 
+export const GET_ALL_FRIENDS_FROM_PROFILE = (
+  userId: number,
+  profileId: number,
+) => {
+  return Prisma.sql`
+        SELECT u.id as friend_id,
+          u.first_name,
+          u.last_name,
+          u.email,
+          u.profile_pic_url
+        FROM User u
+        WHERE u.id = ${profileId}
+        UNION
+        SELECT
+          u.id as friend_id,
+          u.first_name,
+          u.last_name,
+          u.email,
+          u.profile_pic_url
+        FROM User u
+        JOIN Friend f
+        ON u.id = f.receiver_id
+        WHERE f.sender_id = ${profileId}
+        AND NOT u.id = ${userId}
+        AND f.invitation_status = ${FRIEND_INVITATION_STATUS.ACCEPTED}
+        UNION
+        SELECT
+          u.id as friend_id,
+          u.first_name,
+          u.last_name,
+          u.email,
+          u.profile_pic_url
+        FROM User u
+        JOIN Friend f
+        ON u.id = f.sender_id
+        WHERE f.receiver_id = ${profileId}
+        AND NOT u.id = ${userId}
+        AND f.invitation_status = ${FRIEND_INVITATION_STATUS.ACCEPTED}
+      `;
+};
+
 export const QUERY_FRIENDS = (searchTerm: string, userId: number) => {
   return Prisma.sql`
     SELECT * FROM (

@@ -6,6 +6,7 @@ import { PrismaErrorHandler } from '../common/prisma-error.handler';
 import {
   GetSuggestions,
   GET_ALL_FRIENDS,
+  GET_ALL_FRIENDS_FROM_PROFILE,
   GET_SUGGESTIONS,
   QUERY_FRIENDS,
 } from './friend.raw-query';
@@ -98,6 +99,22 @@ export class FriendService {
           'password' | 'created_at' | 'updated_at'
         >[]
       >(GET_ALL_FRIENDS(userId));
+      return friends;
+    } catch (err) {
+      return this.errorHandler.handle(err);
+    }
+  }
+
+  async getAllFromProfile(userId: number, profileId: number) {
+    try {
+      const friends = await this.prisma.$queryRaw<
+        Omit<
+          User & {
+            friend_id: number;
+          },
+          'password' | 'created_at' | 'updated_at'
+        >[]
+      >(GET_ALL_FRIENDS_FROM_PROFILE(userId, profileId));
       return friends;
     } catch (err) {
       return this.errorHandler.handle(err);

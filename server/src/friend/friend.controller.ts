@@ -36,6 +36,15 @@ export class FriendController {
   }
 
   @HttpCode(HttpStatus.OK)
+  @Get('profile')
+  getFriendsByProfile(
+    @ReqUser('id') userId: number,
+    @Query('id') profileId: number,
+  ) {
+    return this.friend.getAllFromProfile(userId, profileId);
+  }
+
+  @HttpCode(HttpStatus.OK)
   @Get()
   getAll(@ReqUser('id') userId: number) {
     return this.friend.getAll(userId);
