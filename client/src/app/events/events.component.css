@@ -1,13 +1,13 @@
+.events {
+  padding: 10px;
+}
+
 h2 {
   text-align: center;
 }
 
-.events-table {
+.mat-elevation-z2 {
   height: 300px;
   overflow: auto;
-}
-
-.deleted-table {
-  height: 300px;
-  overflow: auto;
+  margin-bottom: 10px;
 }

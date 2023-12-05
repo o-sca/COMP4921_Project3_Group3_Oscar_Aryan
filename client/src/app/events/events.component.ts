@@ -12,6 +12,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { EventService } from '../core/services/event.service';
 import { Event } from '../core/schemas/events.schema';
+import { UtilityService } from '../core/services/utility.service';
 
 @Component({
   selector: 'app-events',
@@ -38,7 +39,10 @@ export class EventsComponent implements OnInit {
 
   deletedSource: MatTableDataSource<Event>;
 
-  constructor(private event: EventService) {
+  constructor(
+    private event: EventService,
+    private utility: UtilityService,
+  ) {
     this.eventsSource = new MatTableDataSource<Event>();
     this.eventsDisplayColumns = ['title', 'start_date_time', 'end_date_time'];
 
@@ -49,11 +53,10 @@ export class EventsComponent implements OnInit {
     this.event.getEvents().subscribe({
       next: (events) => {
         events.forEach((event) => {
-          event.start_date_time = new Date(
+          event.start_date_time = this.utility.convertDate(
             event.start_date_time,
-          ).toDateString();
-
-          event.end_date_time = new Date(event.end_date_time).toDateString();
+          );
+          event.end_date_time = this.utility.convertDate(event.end_date_time);
         });
         this.eventsSource.data = events;
       },
@@ -62,11 +65,10 @@ export class EventsComponent implements OnInit {
     this.event.getDeletedEvents().subscribe({
       next: (events) => {
         events.forEach((event) => {
-          event.start_date_time = new Date(
+          event.start_date_time = this.utility.convertDate(
             event.start_date_time,
-          ).toDateString();
-
-          event.end_date_time = new Date(event.end_date_time).toDateString();
+          );
+          event.end_date_time = this.utility.convertDate(event.end_date_time);
         });
         this.deletedSource.data = events;
       },

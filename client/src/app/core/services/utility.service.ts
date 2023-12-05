@@ -9,4 +9,10 @@ export class UtilityService {
     }
     return apiUrl;
   }
+
+  convertDate(date: string) {
+    const dateString = new Date(date).toDateString();
+    const timeString = new Date(date).toLocaleTimeString();
+    return dateString + ' ' + timeString;
+  }
 }

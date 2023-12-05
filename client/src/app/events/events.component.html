@@ -1,59 +1,61 @@
-<div classs="events-container">
-  <h2>Events</h2>
-  <section class="events-table" [tabIndex]="0">
-    <table mat-table [dataSource]="eventsSource">
-      @for (column of eventsDisplayColumns; track column) {
-      <ng-container matColumnDef="{{ column }}">
-        <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
-        <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
-      </ng-container>
-      }
-      <tr
-        mat-header-row
-        *matHeaderRowDef="eventsDisplayColumns; sticky: true"
-      ></tr>
-      <tr mat-row *matRowDef="let row; columns: eventsDisplayColumns"></tr>
-    </table>
-  </section>
-</div>
-<div class="deleted-container">
-  <h2>Deleted Events</h2>
-  <section class="deleted-table" [tabIndex]="0">
-    <table mat-table [dataSource]="deletedSource">
-      @for (column of eventsDisplayColumns; track column) {
-      <ng-container matColumnDef="{{ column }}">
-        <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
-        <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
-      </ng-container>
-      }
-      <ng-container matColumnDef="days_left">
-        <th mat-header-cell *matHeaderCellDef>Days Left</th>
-        <td mat-cell *matCellDef="let event">
-          {{ event.days_left }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="restore">
-        <th mat-header-cell *matHeaderCellDef>Restore</th>
-        <td mat-cell *matCellDef="let event">
-          <button mat-icon-button (click)="restoreEvent(event)">
-            <mat-icon>restore</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-      <tr
-        mat-header-row
-        *matHeaderRowDef="
-          eventsDisplayColumns.concat(['days_left', 'restore']);
-          sticky: true
-        "
-      ></tr>
-      <tr
-        mat-row
-        *matRowDef="
-          let row;
-          columns: eventsDisplayColumns.concat(['days_left', 'restore'])
-        "
-      ></tr>
-    </table>
-  </section>
+<div class="events">
+  <div class="mat-elevation-z2">
+    <h2>Events</h2>
+    <section class="events-table" [tabIndex]="0">
+      <table mat-table [dataSource]="eventsSource">
+        @for (column of eventsDisplayColumns; track column) {
+        <ng-container matColumnDef="{{ column }}">
+          <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+          <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
+        </ng-container>
+        }
+        <tr
+          mat-header-row
+          *matHeaderRowDef="eventsDisplayColumns; sticky: true"
+        ></tr>
+        <tr mat-row *matRowDef="let row; columns: eventsDisplayColumns"></tr>
+      </table>
+    </section>
+  </div>
+  <div class="mat-elevation-z2">
+    <h2>Deleted Events</h2>
+    <section class="deleted-table" [tabIndex]="0">
+      <table mat-table [dataSource]="deletedSource">
+        @for (column of eventsDisplayColumns; track column) {
+        <ng-container matColumnDef="{{ column }}">
+          <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+          <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
+        </ng-container>
+        }
+        <ng-container matColumnDef="days_left">
+          <th mat-header-cell *matHeaderCellDef>Days Left</th>
+          <td mat-cell *matCellDef="let event">
+            {{ event.days_left }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="restore">
+          <th mat-header-cell *matHeaderCellDef>Restore</th>
+          <td mat-cell *matCellDef="let event">
+            <button mat-icon-button (click)="restoreEvent(event)">
+              <mat-icon>restore</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <tr
+          mat-header-row
+          *matHeaderRowDef="
+            eventsDisplayColumns.concat(['days_left', 'restore']);
+            sticky: true
+          "
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="
+            let row;
+            columns: eventsDisplayColumns.concat(['days_left', 'restore'])
+          "
+        ></tr>
+      </table>
+    </section>
+  </div>
 </div>

@@ -13,6 +13,7 @@ import { CalendarApi } from '@fullcalendar/core';
 import { Event } from '../../../../schemas/events.schema';
 import { EventService } from '../../../../services/event.service';
 import { SpinnerService } from '../../../../services/spinner.service';
+import { UtilityService } from '../../../../services/utility.service';
 
 @Component({
   templateUrl: './show-events-dialog.component.html',
@@ -40,6 +41,7 @@ export class ShowEventDialogComponent implements OnInit {
     public data: { id: string; calendarApi: CalendarApi },
     public spinner: SpinnerService,
     private event: EventService,
+    private utility: UtilityService,
   ) {
     this.id = parseInt(data.id, 10);
     this.calendar = data.calendarApi;
@@ -51,8 +53,8 @@ export class ShowEventDialogComponent implements OnInit {
     this.event.getEvent(this.id).subscribe({
       next: (event) => {
         if (event.userId === event.event_owner_id) this.eventOwner = true;
-        event.start_date_time = this.convertDate(event.start_date_time);
-        event.end_date_time = this.convertDate(event.end_date_time);
+        event.start_date_time = this.utility.convertDate(event.start_date_time);
+        event.end_date_time = this.utility.convertDate(event.end_date_time);
         event.Event_Attendance.forEach((attendee) => {
           if (
             attendee.user_attende_id === event.userId &&
@@ -91,11 +93,5 @@ export class ShowEventDialogComponent implements OnInit {
         }
       },
     });
-  }
-
-  private convertDate(date: string) {
-    const dateString = new Date(date).toDateString();
-    const timeString = new Date(date).toLocaleTimeString();
-    return dateString + ' ' + timeString;
   }
 }
