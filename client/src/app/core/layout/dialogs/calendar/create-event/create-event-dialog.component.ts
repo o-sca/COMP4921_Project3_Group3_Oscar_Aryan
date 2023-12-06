@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
@@ -34,6 +35,7 @@ import { SpinnerService } from '../../../../services/spinner.service';
   standalone: true,
   imports: [
     MatButtonModule,
+    MatCheckboxModule,
     MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
@@ -73,6 +75,10 @@ export class CreateEventDialogComponent {
   friendsSelected: FriendProfile[];
   selectedFriends: Set<FriendProfile>;
 
+  allDay: boolean;
+  repeatOptions: { value: number[]; viewValue: string }[];
+  repeatOption: FormControl<string>;
+
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
@@ -108,6 +114,19 @@ export class CreateEventDialogComponent {
     this.friends = [];
     this.friendsSelected = [];
     this.selectedFriends = new Set<FriendProfile>();
+
+    this.allDay = false;
+    this.repeatOptions = [
+      { viewValue: 'Does not repeat', value: [] },
+      { viewValue: 'Daily', value: [0, 1, 2, 3, 4, 5, 6] },
+      { viewValue: 'Weekly', value: [data.dateSelectInfo.start.getUTCDay()] },
+    ];
+    this.repeatOption = new FormControl<string>(
+      this.repeatOptions[0].viewValue,
+      {
+        nonNullable: true,
+      },
+    );
   }
 
   searchFriend() {
@@ -142,9 +161,12 @@ export class CreateEventDialogComponent {
           if (!body) {
             return;
           }
+
           this.calendarApi.addEvent({
             id: body.id.toString(),
             title: this.eventTitle.value,
+            allDay: this.allDay,
+            daysOfWeek: this.repeatOption.value,
             start: startDate,
             end: endDate,
             color: this.selectedColor.value,
