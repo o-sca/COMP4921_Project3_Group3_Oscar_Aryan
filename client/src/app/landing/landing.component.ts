@@ -65,6 +65,8 @@ export class LandingComponent implements OnInit {
             start: event.start_date_time,
             end: event.end_date_time,
             color: event.color,
+            daysOfWeek: event.daysOfWeek,
+            allDay: event.all_day,
             interactive: true,
           };
         });

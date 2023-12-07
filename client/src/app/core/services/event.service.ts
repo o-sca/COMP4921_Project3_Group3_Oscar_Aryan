@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, throwError } from 'rxjs';
-import { FriendProfile } from '../schemas/friends.schema';
+import { Friend } from '../schemas/friends.schema';
 import { JSON_HEADERS } from './http-header';
 import { UtilityService } from './utility.service';
 import { Event } from '../schemas/events.schema';
@@ -71,7 +71,7 @@ export class EventService {
     daysOfWeek: number[];
     startDate: Date;
     endDate: Date;
-    friendsSelected: Set<FriendProfile>;
+    friendsSelected: Friend[];
   }) {
     return this.http
       .post(
@@ -83,7 +83,7 @@ export class EventService {
           daysOfWeek: daysOfWeek,
           startDate: startDate.toISOString(),
           endDate: endDate.toISOString(),
-          friends: Array.from(friendsSelected),
+          friends: Array.from(friendsSelected.values()),
         },
         { observe: 'response', headers: JSON_HEADERS },
       )

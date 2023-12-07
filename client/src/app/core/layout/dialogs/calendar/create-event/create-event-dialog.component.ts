@@ -19,15 +19,17 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatListModule, MatSelectionListChange } from '@angular/material/list';
+import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { CalendarApi, DateSelectArg } from '@fullcalendar/core';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
-import { FriendProfile } from '../../../../schemas/friends.schema';
+import { Friend } from '../../../../schemas/friends.schema';
 import { EventService } from '../../../../services/event.service';
 import { FriendService } from '../../../../services/friend.service';
 import { SpinnerService } from '../../../../services/spinner.service';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   templateUrl: './create-event-dialog.component.html',
@@ -50,6 +52,7 @@ import { SpinnerService } from '../../../../services/spinner.service';
     MatNativeDateModule,
     NgxMatTimepickerModule,
     FormsModule,
+    MatTableModule,
   ],
   providers: [
     {
@@ -70,10 +73,10 @@ export class CreateEventDialogComponent {
   endTime: FormControl<string>;
   selectedColor: FormControl<string>;
 
-  searchFriendInput: FormControl<string>;
-  friends: FriendProfile[];
-  friendsSelected: FriendProfile[];
-  selectedFriends: Set<FriendProfile>;
+  friendsSource = new MatTableDataSource<Friend>();
+  friendsColumns: string[] = ['first_name', 'last_name', 'select'];
+
+  selection = new SelectionModel<Friend>(true, []);
 
   allDay: boolean;
   repeatOptions: { index: number; value: number[]; viewValue: string }[];
@@ -109,12 +112,6 @@ export class CreateEventDialogComponent {
     });
     this.endTime = new FormControl<string>('00:00', { nonNullable: true });
 
-    this.searchFriendInput = new FormControl<string>('', { nonNullable: true });
-
-    this.friends = [];
-    this.friendsSelected = [];
-    this.selectedFriends = new Set<FriendProfile>();
-
     this.allDay = false;
     this.repeatOptions = [
       { index: 0, viewValue: 'Does not repeat', value: [] },
@@ -128,17 +125,39 @@ export class CreateEventDialogComponent {
     this.repeatOption = new FormControl<number[]>(this.repeatOptions[0].value, {
       nonNullable: true,
     });
-  }
 
-  searchFriend() {
-    if (!this.searchFriendInput.value) {
-      return;
-    }
-    this.friend.searchFriend(this.searchFriendInput.value).subscribe({
-      next: (results) => {
-        this.friends = results;
+    this.friend.getFriends().subscribe({
+      next: (body) => {
+        this.friendsSource.data = body.friends;
       },
     });
+  }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.friendsSource.data.length;
+    return numSelected === numRows;
+  }
+
+  toggleAllRows() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      return;
+    }
+  }
+
+  checkboxLabel(row?: Friend): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
+      row.first_name + 1
+    }`;
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.friendsSource.filter = filterValue.trim().toLowerCase();
   }
 
   createEvent() {
@@ -157,7 +176,7 @@ export class CreateEventDialogComponent {
         allDay: this.allDay,
         startDate: startDate,
         endDate: endDate,
-        friendsSelected: this.selectedFriends,
+        friendsSelected: this.selection.selected,
       })
       .subscribe({
         next: (body) => {
@@ -177,14 +196,6 @@ export class CreateEventDialogComponent {
           this.calendarApi.unselect();
         },
       });
-  }
-
-  selected(event: MatSelectionListChange) {
-    event.source.selectedOptions.selected.map((option) => {
-      if (option.selected) {
-        this.selectedFriends.add(option.value);
-      }
-    });
   }
 
   private mergeDateAndTime(date: FormControl<Date>, time: FormControl<string>) {

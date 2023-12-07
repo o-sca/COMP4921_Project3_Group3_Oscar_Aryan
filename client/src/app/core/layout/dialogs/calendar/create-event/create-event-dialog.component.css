@@ -35,22 +35,17 @@
 }
 
 .add-friends-container mat-form-field {
-  width: 80%;
+  width: 100%;
 }
 
-.add-friends-container mat-selection-list {
-  max-height: 150px;
+.mat-mdc-table {
+  max-height: 50px;
   overflow: auto;
 }
 
 .selected-friends-list {
   max-height: 50px;
   overflow: auto;
-}
-
-.search-friend button {
-  cursor: pointer;
-  margin-left: 20px;
 }
 
 .friend-row {

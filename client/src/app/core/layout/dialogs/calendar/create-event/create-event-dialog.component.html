@@ -127,36 +127,57 @@
       <mat-form-field>
         <input
           matInput
+          (keyup)="applyFilter($event)"
           placeholder="Search for friends"
-          [formControl]="searchFriendInput"
         />
       </mat-form-field>
-      <button mat-mini-fab color="primary" (click)="searchFriend()">
-        <mat-icon>search</mat-icon>
-      </button>
     </div>
+    <div style="overflow: auto; max-height: 150px">
+      <table mat-table [dataSource]="friendsSource">
+        <ng-container matColumnDef="first_name">
+          <th mat-header-cell *matHeaderCellDef>First Name</th>
+          <td mat-cell *matCellDef="let element">{{ element.first_name }}</td>
+        </ng-container>
 
-    <div class="selected-friends-list">
-      @for (selected of selectedFriends; track selected) {
-      <p>{{ selected.first_name }} {{ selected.last_name }}</p>
-      }
+        <ng-container matColumnDef="last_name">
+          <th mat-header-cell *matHeaderCellDef>Last Name</th>
+          <td mat-cell *matCellDef="let element">{{ element.last_name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox
+              (change)="$event ? toggleAllRows() : null"
+              [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()"
+              [aria-label]="checkboxLabel()"
+            >
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox
+              (click)="$event.stopPropagation()"
+              (change)="$event ? selection.toggle(row) : null"
+              [checked]="selection.isSelected(row)"
+              [aria-label]="checkboxLabel(row)"
+            >
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="friendsColumns; sticky: true"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: friendsColumns"
+          (click)="selection.toggle(row)"
+        ></tr>
+        <tr *matNoDataRow>
+          <td colspan="3">No data</td>
+        </tr>
+      </table>
     </div>
-    <mat-selection-list #friendsSelected (selectionChange)="selected($event)">
-      @for (friend of friends; track friend) {
-      <mat-list-option class="friend-row" [value]="friend">
-        <div class="friend-info">
-          <mat-icon>person</mat-icon>
-          <div class="friend-name">
-            {{ friend.first_name }} {{ friend.last_name }}
-          </div>
-        </div>
-      </mat-list-option>
-      }
-    </mat-selection-list>
   </div>
   <mat-dialog-actions>
     <button
-      [disabled]="eventTitle.invalid"
       mat-dialog-close
       mat-raised-button
       color="primary"
