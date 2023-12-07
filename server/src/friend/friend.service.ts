@@ -29,6 +29,7 @@ export class FriendService {
       );
       return suggestions;
     } catch (err) {
+      console.log(err);
       return this.errorHandler.handle(err);
     }
   }

@@ -4,7 +4,7 @@ export const GET_SUGGESTIONS = (userId: number) => {
   return Prisma.sql`
       SELECT 
         u.id, 
-        CONCAT(u.first_name, " ", u.last_name) as name, 
+        CONCAT(u.first_name, ' ', u.last_name) as name, 
         u.email, 
         u.profile_pic_url
       FROM User u
