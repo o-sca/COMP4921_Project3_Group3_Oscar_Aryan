@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Event` ADD COLUMN `daysOfWeek` VARCHAR(191) NOT NULL DEFAULT '[]';

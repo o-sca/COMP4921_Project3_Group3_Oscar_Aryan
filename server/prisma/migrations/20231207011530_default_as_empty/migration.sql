@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Event` MODIFY `daysOfWeek` VARCHAR(191) NOT NULL DEFAULT '';

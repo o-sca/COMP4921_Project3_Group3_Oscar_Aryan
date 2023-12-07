@@ -138,6 +138,8 @@ export class EventService {
         data: {
           event_owner_id: userId,
           color: dto.color,
+          all_day: dto.allDay,
+          daysOfWeek: dto.daysOfWeek.toString(),
           title: dto.eventTitle,
           start_date_time: dto.startDate,
           end_date_time: dto.endDate,

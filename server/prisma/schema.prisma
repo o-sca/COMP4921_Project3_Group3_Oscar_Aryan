@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -35,8 +35,8 @@ model User {
   password        String @db.VarChar(255)
   profile_pic_url String @default("") @db.VarChar(150)
 
-  friend_sent      Friend[] @relation("SenderFriend")
-  friends_received Friend[] @relation("ReceiverFriend")
+  friend_sent      Friend[]           @relation("SenderFriend")
+  friends_received Friend[]           @relation("ReceiverFriend")
   events           Event[]
   event_attendance Event_Attendance[]
 }
@@ -69,6 +69,10 @@ model Event {
   color   String  @default("#3788d8")
   deleted Boolean @default(false)
 
+  daysOfWeek String @default("")
+
+  all_day Boolean @default(false)
+
   event_owner_id Int
   event_owner    User @relation(fields: [event_owner_id], references: [id], onDelete: Cascade)
 
@@ -93,6 +97,6 @@ model ExpiredJwt {
   id         Int      @id @default(autoincrement())
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  
-  token      String   @db.Text
+
+  token String @db.Text
 }

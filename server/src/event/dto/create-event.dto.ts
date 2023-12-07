@@ -1,4 +1,4 @@
-import { IsArray, IsDateString, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsDateString, IsString } from 'class-validator';
 
 interface Friend {
   id: number;
@@ -14,6 +14,12 @@ export class CreateEventDto {
 
   @IsString()
   color: string;
+
+  @IsBoolean()
+  allDay: boolean;
+
+  @IsArray()
+  daysOfWeek: number[];
 
   @IsDateString()
   startDate: string;
