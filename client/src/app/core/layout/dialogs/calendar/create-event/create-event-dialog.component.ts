@@ -76,8 +76,8 @@ export class CreateEventDialogComponent {
   selectedFriends: Set<FriendProfile>;
 
   allDay: boolean;
-  repeatOptions: { value: number[]; viewValue: string }[];
-  repeatOption: FormControl<string>;
+  repeatOptions: { index: number; value: number[]; viewValue: string }[];
+  repeatOption: FormControl<number[]>;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -117,16 +117,17 @@ export class CreateEventDialogComponent {
 
     this.allDay = false;
     this.repeatOptions = [
-      { viewValue: 'Does not repeat', value: [] },
-      { viewValue: 'Daily', value: [0, 1, 2, 3, 4, 5, 6] },
-      { viewValue: 'Weekly', value: [data.dateSelectInfo.start.getUTCDay()] },
-    ];
-    this.repeatOption = new FormControl<string>(
-      this.repeatOptions[0].viewValue,
+      { index: 0, viewValue: 'Does not repeat', value: [] },
+      { index: 1, viewValue: 'Daily', value: [0, 1, 2, 3, 4, 5, 6] },
       {
-        nonNullable: true,
+        index: 2,
+        viewValue: 'Weekly',
+        value: [data.dateSelectInfo.start.getUTCDay()],
       },
-    );
+    ];
+    this.repeatOption = new FormControl<number[]>(this.repeatOptions[0].value, {
+      nonNullable: true,
+    });
   }
 
   searchFriend() {
@@ -152,6 +153,8 @@ export class CreateEventDialogComponent {
       .create({
         eventTitle: this.eventTitle.value,
         color: this.selectedColor.value,
+        daysOfWeek: this.repeatOption.value,
+        allDay: this.allDay,
         startDate: startDate,
         endDate: endDate,
         friendsSelected: this.selectedFriends,
@@ -166,7 +169,7 @@ export class CreateEventDialogComponent {
             id: body.id.toString(),
             title: this.eventTitle.value,
             allDay: this.allDay,
-            daysOfWeek: this.repeatOption.value,
+            daysOfWeek: this.repeatOption.value.toString(),
             start: startDate,
             end: endDate,
             color: this.selectedColor.value,

@@ -24,6 +24,8 @@ export interface Event {
   end_date_time: string;
   color: string;
   deleted: boolean;
+  daysOfWeek: string;
+  all_day: boolean;
   event_owner_id: number;
   event_owner: {
     id: number;
