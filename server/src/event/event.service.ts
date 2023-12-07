@@ -147,7 +147,7 @@ export class EventService {
             createMany: {
               data: dto.friends.map((friend) => {
                 return {
-                  user_attende_id: friend.id,
+                  user_attende_id: friend.friend_id,
                   response_type: EVENT_INVITATION_STATUS.PENDING,
                 };
               }),
