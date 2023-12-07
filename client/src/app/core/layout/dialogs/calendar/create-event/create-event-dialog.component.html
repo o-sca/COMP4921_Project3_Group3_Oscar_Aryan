@@ -156,6 +156,7 @@
   </div>
   <mat-dialog-actions>
     <button
+      [disabled]="eventTitle.invalid"
       mat-dialog-close
       mat-raised-button
       color="primary"
