@@ -15,7 +15,10 @@
     "pre-push": "npx prettier --write **/*.{js,ts,md,css}"
   },
   "lint-staged": {
-    "*.{js,ts}": "eslint --cache"
+    "*.{js,ts}": [
+      "eslint --cache --fix",
+      "prettier --write ."
+    ]
   },
   "private": true,
   "dependencies": {

@@ -39,10 +39,7 @@ export class EventsComponent implements OnInit {
 
   deletedSource: MatTableDataSource<Event>;
 
-  constructor(
-    private event: EventService,
-    private utility: UtilityService,
-  ) {
+  constructor(private event: EventService, private utility: UtilityService) {
     this.eventsSource = new MatTableDataSource<Event>();
     this.eventsDisplayColumns = ['title', 'start_date_time', 'end_date_time'];
 

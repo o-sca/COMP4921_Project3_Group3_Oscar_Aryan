@@ -14,10 +14,7 @@ export class AuthService {
   private _cookie: CookieService;
   @Output() authChanged: EventEmitter<boolean> = new EventEmitter();
 
-  constructor(
-    private http: HttpClient,
-    private utility: UtilityService,
-  ) {
+  constructor(private http: HttpClient, private utility: UtilityService) {
     this._cookie = inject(CookieService);
     this._baseUrl = this.utility.getApiUrl();
     this._redirectUrl = '';

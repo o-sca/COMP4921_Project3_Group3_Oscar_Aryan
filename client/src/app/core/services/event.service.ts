@@ -10,10 +10,7 @@ import { Event } from '../schemas/events.schema';
 export class EventService {
   private readonly _baseUrl: string;
 
-  constructor(
-    private http: HttpClient,
-    private utility: UtilityService,
-  ) {
+  constructor(private http: HttpClient, private utility: UtilityService) {
     this._baseUrl = this.utility.getApiUrl();
   }
 

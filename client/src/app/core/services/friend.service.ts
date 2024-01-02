@@ -14,10 +14,7 @@ import { JSON_HEADERS } from './http-header';
 export class FriendService {
   private readonly _baseUrl: string;
 
-  constructor(
-    private http: HttpClient,
-    private utility: UtilityService,
-  ) {
+  constructor(private http: HttpClient, private utility: UtilityService) {
     this._baseUrl = this.utility.getApiUrl();
   }
 
